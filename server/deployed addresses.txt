@@ -1,0 +1,7 @@
+implementation of CrowdfundingRegistry 0x388cF796159735B7d0caf9282e12DAcCb0b6AB2F
+CrowdfundingRegistry proxy 0xCad1B7AaA91af36FBB8023B29F4402599Dc6c28d
+proxyadmin xxxxxxxxxxxxxxxxxx
+
+upgrade
+ImplementationV2 contract address: 0x138C15c9CCaE8C0881d7108a275422F173262e07
+Contract Upgraded address 0x7fc677221071704216515E7C05e49422411ceB85
