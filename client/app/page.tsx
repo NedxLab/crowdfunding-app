@@ -2,21 +2,13 @@
 
 import { Slider, SliderItem } from "@/components/slider/slider";
 import StyleWrapper from "@/components/slider/style";
-import Login from "@/components/login";
 import Campaigns from "@/components/campaigns";
-import Register from "@/components/register";
-import CreateCampaign from "@/components/createCampaign";
 import Home from "@/components/home";
+import { Web3Button } from "@web3modal/react";
+import Profile from "@/components/profile";
 
 const HomeV5 = () => {
-  const menuData = [
-    "01. Home",
-    "02. About",
-    "03. Campaigns",
-    "04. Create Campaign",
-    "05. Profile",
-    "06. Extras",
-  ];
+  const menuData = ["01. Home", "02. Campaigns", "03. Profile"];
 
   const settings = {
     swipe: false,
@@ -41,22 +33,16 @@ const HomeV5 = () => {
             <Home />
           </SliderItem>
           <SliderItem>
-            <Login />
-          </SliderItem>
-          <SliderItem>
             <Campaigns />
           </SliderItem>
           <SliderItem>
-            <Register />
-          </SliderItem>
-          <SliderItem>
-            <CreateCampaign />
-          </SliderItem>
-          <SliderItem>
-            <Register />
+            <Profile />
           </SliderItem>
         </Slider>
       </StyleWrapper>
+      <div className="fixed right-0 bottom-0 px-3 py-5">
+        <Web3Button />
+      </div>
     </>
   );
 };
