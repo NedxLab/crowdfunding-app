@@ -35,7 +35,7 @@ export const metadata = {
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
 const wagmiConfig = createConfig({
   autoConnect: true,
-  connectors: w3mConnectors({ projectId, version: 2, chains }),
+  connectors: w3mConnectors({ projectId, chains }),
   publicClient,
 });
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
