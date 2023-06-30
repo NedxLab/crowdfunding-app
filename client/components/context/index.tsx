@@ -8,10 +8,13 @@ import { IRegisterUser } from "@/types/types";
 import { ILoginUser } from "@/types/types";
 import React, { useContext, createContext } from "react";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 
 export const StateContext = createContext(null);
 
 export const StateContextProvider = ({ children }: any) => {
+  const { address, isConnected, isDisconnected } = useAccount();
+
   // declare next router
   const router = useRouter();
   if (typeof window !== "undefined") {
@@ -94,6 +97,9 @@ export const StateContextProvider = ({ children }: any) => {
       minAmount: minimumContribution,
       description: _campaignDescription,
     }: ICreateCampaign) => {
+      if (isDisconnected) {
+        return;
+      }
       try {
         if (!ethereum) return alert("Please install Metamask");
 
@@ -128,6 +134,9 @@ export const StateContextProvider = ({ children }: any) => {
       correctAmount,
       campaignId: _campaignId,
     }: any) => {
+      if (isDisconnected) {
+        return;
+      }
       try {
         if (!ethereum) return alert("Please install Metamask");
 
@@ -179,6 +188,9 @@ export const StateContextProvider = ({ children }: any) => {
     };
     // get All Donations
     const getAllDonations = async (_campaignId: any) => {
+      if (isDisconnected) {
+        return;
+      }
       try {
         if (!ethereum) return alert("Please install Metamask");
 
@@ -228,8 +240,11 @@ export const StateContextProvider = ({ children }: any) => {
     };
     // get Campaigns By Entrepreneur
     const getCampaignsByEntrepreneur = async (address: any) => {
+      if (isDisconnected) {
+        return;
+      }
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        // if (!ethereum) return alert("Please install Metamask");
 
         const contract = await getEtheriumContract();
 
@@ -279,9 +294,10 @@ export const StateContextProvider = ({ children }: any) => {
 
     // create campaign
     const getCampaigns = async () => {
+      if (isDisconnected) {
+        return;
+      }
       try {
-        if (!ethereum) return alert("Please install Metamask");
-
         const contract = await getEtheriumContract();
 
         const provider = new ethers.providers.Web3Provider(ethereum);

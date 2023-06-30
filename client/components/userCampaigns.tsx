@@ -23,23 +23,25 @@ const UserCampaigns = () => {
 
   return (
     <div className="flex flex-row items-center justify-center flex-wrap gap-7 mt-28 mb-10 mxs:px-6">
-      {campaigns
-        ? campaigns.map((camp: any, i: any) => (
-            <a
-              href={`/campaign/${i}`}
-              className="h-72 xs:w-1/3 md:w-1/4 lg:w-1/5 mxs:w-full"
-            >
-              {" "}
-              <Campaign
-                key={i}
-                title={camp.campaignTitle}
-                img={camp.imageUri}
-                donated={camp.raisedAmount["_hex"]}
-                amount={camp.targetAmount["_hex"]}
-              />
-            </a>
-          ))
-        : ""}
+      {campaigns ? (
+        campaigns.map((camp: any, i: any) => (
+          <a
+            href={`/campaign/${i}`}
+            className="h-72 xs:w-1/3 md:w-1/4 lg:w-1/5 mxs:w-full"
+          >
+            {" "}
+            <Campaign
+              key={i}
+              title={camp.campaignTitle}
+              img={camp.imageUri}
+              donated={camp.raisedAmount["_hex"]}
+              amount={camp.targetAmount["_hex"]}
+            />
+          </a>
+        ))
+      ) : (
+        <div className="text-4xl font-bold">No Campaigns yet</div>
+      )}
     </div>
   );
 };

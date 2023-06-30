@@ -37,7 +37,9 @@ const Profile = () => {
           </div>
           <div className="flex flex-col items-center justify-center w-1/4 h-full ">
             <h1>Active Campaigns</h1>
-            <h1 className="text-2xl font-bold">{campaigns.length}</h1>
+            <h1 className="text-2xl font-bold">
+              {campaigns ? campaigns.length : "0"}
+            </h1>
           </div>
         </div>
         <UserCampaigns />
