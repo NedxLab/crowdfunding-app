@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const campaignId = params.slug;
-    const correctAmount = amount * 1000000000 * 1000000000;
+    const correctAmount = amount * 100000000 * 10000000;
     const campParams = {
       correctAmount,
       campaignId,
