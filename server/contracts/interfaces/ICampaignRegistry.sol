@@ -18,10 +18,6 @@ interface ICampaignRegistry {
         address walletAddress;
         bool verified;
     }
-    struct Contributions {
-  uint256 value;
-  uint256 date;
-}
 
     struct Campaign {
         uint256 campaignId;
@@ -30,54 +26,68 @@ interface ICampaignRegistry {
         uint256 requestAmount;
         uint256 deadline;
         uint256 completeAt;
-        uint256 startAt;
+        uint256 minimumContribution;
         string imageUri;
         string campaignTitle;
         string campaignDescription;
         address entrepreneur;
-        address vendor;
+        address payable vendor;
         address[] investors; 
         CampaignStatus status;
         bool requestCreated;
+        bool fundsReceived;
     }
 
     /*********************** Events *******************/
+    /**
+     * @notice Emitted when a new user is registered and verified
+     * @param email The campaign identifier
+     * @param verified This shows whether user is a verified
+     * @param walletAddress The walletAddress of the user, 
+     */
+     event UserRegistered(string email, bool verified, address walletAddress);
 
     /**
-     * @notice Emitted when a new property NFT is minted.
-     * @param campaignId The plotno of the collection owner at this time this property NFT was minted.
-     * @param entrepreneur The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
-     * @param targetAmount The estateName of the newly minted property NFT, 
-     * @param deadline The actual price of the plot of the newly minted property NFT.
+     * @notice Emitted when a new campaign is created
+     * @param campaignId The campaign identifier
+     * @param entrepreneur The enterpreneur creating the campaign
+     * @param targetAmount The target amount to be acheived, 
+     * @param deadline The deadline for the camapign
      */
      event CampaignCreated(uint campaignId, address entrepreneur, uint targetAmount, uint deadline);
       /**
-     * @notice Emitted when a new property NFT is minted.
-     * @param campaignId The plotno of the collection owner at this time this property NFT was minted.
-     * @param investor The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
-     * @param amount The estateName of the newly minted property NFT, 
+     * @notice Emitted when a new contrbution is made.
+     * @param campaignId The campaign id
+     * @param investor The investor
+     * @param amount The amount contributed 
      */
     event ContributionMade(uint campaignId, address investor, uint amount);
      /**
-     * @notice Emitted when a new property NFT is minted.
-     * @param campaignId The plotno of the collection owner at this time this property NFT was minted.
-     * @param requestAmount The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
+     * @notice Emitted when a request is mafe.
+     * @param campaignId The campaign identifier
+     * @param requestAmount The amount contributed
      */
     event RequestCreated(uint campaignId, uint requestAmount);
      /**
-     * @notice Emitted when a new property NFT is minted.
-     * @param campaignId The plotno of the collection owner at this time this property NFT was minted.
-     * @param vendor The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
-     * @param amount The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
+     * @notice Emitted when a fund is released
+     * @param campaignId The campaign identifier
+     * @param vendor The vendor that will receive the money
+     * @param amount The amount requested
      */
     event FundsReleased(uint campaignId, address vendor, uint amount);
 
      /**
-     * @notice Emitted when a new property NFT is minted.
-     * @param campaignId The plotno of the collection owner at this time this property NFT was minted.
-     * @param investor The tokenURL of the newly minted property NFT, indexed to enable watching for mint events by the tokenurl.
+     * @notice Emitted when a fund release is requested by entrepenuer.
+     * @param campaignId The campaign ID.
+     * @param investor The investor that approve the request.
      */
     event RequestApproved(uint campaignId, address investor);
+
+ /**
+     * @notice Emitted when a fund is received by vendor.
+     * @param campaignId The campaign ID.
+     */
+    event FundsReceived(uint campaignId);
 
 
     /*********************** Interface Methods  *******************/

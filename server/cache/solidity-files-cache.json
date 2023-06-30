@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/sunday/workspace/masters/crowfunding-app/server/contracts/CampaignRegistry.sol": {
-      "lastModificationDate": 1687440920047,
-      "contentHash": "a850f5fc9093408ed431bacbeb179ec6",
+      "lastModificationDate": 1688025004683,
+      "contentHash": "0af19b4b3565c6edb2dec230a3f804e2",
       "sourceName": "contracts/CampaignRegistry.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -15,6 +15,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -36,6 +37,8 @@
         "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
+        "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol",
+        "hardhat/console.sol",
         "./interfaces/ICampaignRegistry.sol"
       ],
       "versionPragmas": [
@@ -46,8 +49,8 @@
       ]
     },
     "/home/sunday/workspace/masters/crowfunding-app/server/contracts/interfaces/ICampaignRegistry.sol": {
-      "lastModificationDate": 1687441188845,
-      "contentHash": "900f4a7d04fe2a3f3654eb52e6f914f7",
+      "lastModificationDate": 1687938639782,
+      "contentHash": "cde921f9eee9799d88ff243341c970ba",
       "sourceName": "contracts/interfaces/ICampaignRegistry.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -59,6 +62,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -98,6 +102,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -140,6 +145,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -181,6 +187,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -224,6 +231,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -265,6 +273,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -304,6 +313,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -343,6 +353,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -389,6 +400,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -428,6 +440,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -467,6 +480,7 @@
             "enabled": true,
             "runs": 800
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -529,6 +543,86 @@
       ],
       "artifacts": [
         "CountersUpgradeable"
+      ]
+    },
+    "/home/sunday/workspace/masters/crowfunding-app/server/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1687178756671,
+      "contentHash": "4ff3cd2f6272c9a6516e9ee4f2b967d3",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "metadata": {
+            "bytecodeHash": "none"
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 800
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">= 0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/home/sunday/workspace/masters/crowfunding-app/server/node_modules/@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol": {
+      "lastModificationDate": 1687178760743,
+      "contentHash": "b5cad7eaf6f7db7b48d990721ee0d89e",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.18",
+        "settings": {
+          "metadata": {
+            "bytecodeHash": "none"
+          },
+          "optimizer": {
+            "enabled": true,
+            "runs": 800
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EnumerableSetUpgradeable"
       ]
     }
   }

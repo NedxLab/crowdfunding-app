@@ -16,7 +16,7 @@ export const StateContextProvider = ({ children }: any) => {
   const router = useRouter();
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
-    const contractAddress = "0x0865AC9F64cBA8B5939c495815BBAB444328d5ea";
+    const contractAddress = "0xF64c0D86691F235e7a57AB48bA64476c9aBE921F";
     const contractAbi = abi.abi;
     let tx;
 
@@ -91,6 +91,7 @@ export const StateContextProvider = ({ children }: any) => {
       date: _deadline,
       image: _imageUri,
       title: _campaignTitle,
+      minAmount: minimumContribution,
       description: _campaignDescription,
     }: ICreateCampaign) => {
       try {
@@ -107,6 +108,7 @@ export const StateContextProvider = ({ children }: any) => {
         tx = await contract.createCampaign(
           _targetAmount,
           _deadline,
+          minimumContribution,
           _imageUri,
           _campaignTitle,
           _campaignDescription,
@@ -121,6 +123,160 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+    // Donate to campaign
+    const donateToCampaign = async ({
+      correctAmount,
+      campaignId: _campaignId,
+    }: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // _campaignId = ethers.utils.parseEther(_campaignId);
+        tx = await contract.donateToCampaign(_campaignId, {
+          value: correctAmount,
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+
+        await tx.wait();
+        // console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+
+    // get All Donators
+    const getAllDonators = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.donateToCampaign(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // get All Donations
+    const getAllDonations = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.getAllDonations(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        console.log(parseInt(tx));
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+
+    // get Investor Donations
+    const getInvestorDonations = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.getAllDonators(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+
+        console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // get Campaigns By Entrepreneur
+    const getCampaignsByEntrepreneur = async (address: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        let _entrepreneur = address;
+        tx = await contract.getCampaignsByEntrepreneur(_entrepreneur, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // get Total Campaigns By Investor
+    const getTotalCampaignsByInvestor = async ({
+      address: _entrepreneur,
+    }: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.getTotalCampaignsByInvestor(_entrepreneur, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        await tx.wait();
+        // console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+
     // create campaign
     const getCampaigns = async () => {
       try {
@@ -145,6 +301,31 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+
+    // get campaign count
+    const getCampaignCount = async () => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.getCampaignCount({
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        // console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
     return (
       <StateContext.Provider
         value={
@@ -153,6 +334,13 @@ export const StateContextProvider = ({ children }: any) => {
             registerUSer,
             loginUSer,
             getCampaigns,
+            donateToCampaign,
+            getCampaignCount,
+            getInvestorDonations,
+            getAllDonators,
+            getAllDonations,
+            getCampaignsByEntrepreneur,
+            getTotalCampaignsByInvestor,
           } as any
         }
       >

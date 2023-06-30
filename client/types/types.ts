@@ -3,6 +3,7 @@ export interface ICreateCampaign {
   date: number;
   image: string;
   title: string;
+  minAmount: string;
   description: string;
 }
 

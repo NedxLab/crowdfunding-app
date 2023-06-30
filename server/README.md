@@ -1,4 +1,43 @@
 # Crowd Funding Campaign Registry
+`Join the decentralized revolution with our web3 crowdfunding platform. Invest in innovative projects, securely and transparently, using cryptocurrency.`
+
+## `What is Web3 ?`
+
+Web3 refers to the next generation of the internet, where users have more control over their data and interactions with decentralized systems, rather than relying on centralized intermediaries. In a web3 context, crowdfunding allows for secure and transparent investment opportunities without the need for a middleman, enabling a more equitable and efficient system for both investors and project creators.
+
+## `Why we use blockchain in crowdfunding ?`
+
+* `Decentralization:` Blockchain eliminates the need for intermediaries and creates a decentralized platform for transactions, making the process more secure, transparent, and efficient.
+
+* `Immutable Record-Keeping:` Transactions made on the blockchain are permanent and can't be altered, providing a tamper-proof record of all investments and funding.
+
+* `Faster Payments:` Blockchain technology enables faster, peer-to-peer transactions without the need for intermediaries, reducing wait times for funding disbursements.
+
+* `Tokenization:` The ability to issue unique tokens for each project on the blockchain allows for easy tracking of investment and distribution of rewards.
+
+* `Security:` Blockchain's cryptographic security measures protect against hacking, fraud, and other malicious activities.
+
+### `Features` 
+  
+  ✅ Safe and Secure
+
+  ✅ Transparent Transaction
+
+  ✅ payment with Ethereum
+
+  ✅ Industry-ready application
+
+  ✅ Modern / Responsive / Beautiful  Design
+
+### `Used Technologies`
+
+* Solidity
+* Ether.js
+* Smart Contract
+* TypeScript
+* MetaMask
+* Mocha
+* Hardhat
 
 ## Contracts
 
@@ -10,7 +49,7 @@ tokens
 ├─ ERC1155 — "Minimalist and gas efficient standard ERC1155 implementation"
 utils
 ├─ ReentrancyGuard — "Gas optimized reentrancy protection for smart contracts"
-```
+````
 
 # Coverage Report
 
@@ -34,9 +73,12 @@ yarn run build    # install solc and other tools in the docker image
 Don't forget to copy the .env.example file to a file named .env, and then edit it to fill in the details.
 
 # Running all the tests
+# Test results
+![Alt text](./diagrams/test-results.png?raw=true "Test results")
 
 ```shell
 yarn run test
+
 yarn run test:trace       # shows logs + calls
 yarn run test:fresh       # force compile and then run tests
 yarn run test:coverage    # run tests with coverage reports

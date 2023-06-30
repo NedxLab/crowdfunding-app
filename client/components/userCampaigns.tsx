@@ -5,11 +5,13 @@ import Campaign from "./campaign";
 import { useContext } from "react";
 import { StateContext } from "./context";
 import { useState } from "react";
+import { useAccount } from "wagmi";
 
-const Campaigns = () => {
+const UserCampaigns = () => {
+  const { address } = useAccount();
   const [campaigns, setCampaigns] = useState<any>([]);
-  const { getCampaigns }: any = useContext(StateContext);
-  const allCampaigns = getCampaigns();
+  const { getCampaignsByEntrepreneur }: any = useContext(StateContext);
+  const allCampaigns = getCampaignsByEntrepreneur(address);
   allCampaigns
     .then((res: any) => {
       setCampaigns(res);
@@ -42,4 +44,4 @@ const Campaigns = () => {
   );
 };
 
-export default Campaigns;
+export default UserCampaigns;

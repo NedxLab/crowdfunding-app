@@ -1,8 +1,24 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
+import { useAccount } from "wagmi";
+import UserCampaigns from "./userCampaigns";
+import { useContext } from "react";
+import { StateContext } from "./context";
 
 const Profile = () => {
+  const { address } = useAccount();
+  const [campaigns, setCampaigns] = useState<any>([]);
+  const { getCampaignsByEntrepreneur }: any = useContext(StateContext);
+  const allCampaigns = getCampaignsByEntrepreneur(address);
+  allCampaigns
+    .then((res: any) => {
+      setCampaigns(res);
+    })
+    .catch((err: any) => {
+      console.log(err);
+    });
   return (
     <>
       <div className="w-screen flex flex-col items-center justify-around space-y-56">
@@ -21,10 +37,10 @@ const Profile = () => {
           </div>
           <div className="flex flex-col items-center justify-center w-1/4 h-full ">
             <h1>Active Campaigns</h1>
-            <h1 className="text-2xl font-bold">2</h1>
+            <h1 className="text-2xl font-bold">{campaigns.length}</h1>
           </div>
         </div>
-
+        <UserCampaigns />
         <button
           onClick={() => {
             localStorage.clear();

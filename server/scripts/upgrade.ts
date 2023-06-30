@@ -3,7 +3,7 @@ import { ethers, upgrades } from "hardhat";
 
 // This code uses the Hardhat framework and the ethers library to upgrade an existing
 // smart contract on the Ethereum blockchain.
-const PROXY_ADDRESS = "0xCad1B7AaA91af36FBB8023B29F4402599Dc6c28d"; // Address of version 1
+const PROXY_ADDRESS = "0x8450c43556D2f451bCC7F98144Bd788895b5cd2B"; // Address of version 1
 
 async function main() {
   // We get the contract to deploy

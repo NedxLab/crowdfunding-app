@@ -15,6 +15,7 @@ const CampaignForm = ({ setModal }: any) => {
   const [amount, setAmount] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
+  const [minAmount, setMinAmount] = useState("");
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -23,6 +24,7 @@ const CampaignForm = ({ setModal }: any) => {
       date: toTimestamp(date),
       amount,
       image,
+      minAmount,
       description,
     };
     createCampaigns(params);
@@ -80,7 +82,7 @@ const CampaignForm = ({ setModal }: any) => {
                         id="date"
                         className="text-sm text-gray-800 bg-white border rounded leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-indigo-300 shadow-sm placeholder-gray-400 focus:ring-0 w-full"
                         type="date"
-                        placeholder="Minimum Amount"
+                        placeholder="date"
                         value={date}
                         onChange={(event) => setDate(event.target.value)}
                         required
@@ -103,6 +105,23 @@ const CampaignForm = ({ setModal }: any) => {
                         required
                       />
                     </div>
+                  </div>
+                  <div>
+                    <label
+                      className="block text-sm font-medium mb-1"
+                      htmlFor="title"
+                    >
+                      Minimum Amount <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="title"
+                      className="text-sm text-gray-800 bg-white border rounded leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-indigo-300 shadow-sm placeholder-gray-400 focus:ring-0 w-full"
+                      type="number"
+                      placeholder="Minimum amount"
+                      value={minAmount}
+                      onChange={(event) => setMinAmount(event.target.value)}
+                      required
+                    />
                   </div>
                   <div>
                     <label

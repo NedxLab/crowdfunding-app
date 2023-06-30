@@ -71,7 +71,7 @@ const config: HardhatUserConfig | any = {
         enabled: true,
         runs: 800,
       },
-      // viaIR: true,
+      viaIR: true,
     },
   },
   typechain: {
