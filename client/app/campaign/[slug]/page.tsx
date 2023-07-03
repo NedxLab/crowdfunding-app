@@ -4,13 +4,21 @@ import React from "react";
 import { useContext } from "react";
 import { StateContext } from "@/components/context";
 import { useState } from "react";
+import RequestForm from "@/components/requestForm";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [campaigns, setCampaigns] = useState<any>();
   const [progressPercentage, setProgressPercentage] = useState<any>();
-  const { getCampaigns, donateToCampaign, getAllDonators }: any =
-    useContext(StateContext);
+  const {
+    getCampaigns,
+    donateToCampaign,
+    getAllDonators,
+    createFundReleaseRequest,
+    approveFundReleaseRequest,
+    releaseFundsToVendors,
+  }: any = useContext(StateContext);
   const [amount, setAmount] = useState<any>();
+  const [modal, setModal] = useState(false);
 
   // convert hex string
   const convertHexString = (value: string) => {
@@ -36,13 +44,25 @@ export default function Page({ params }: { params: { slug: string } }) {
     .catch((err: any) => {
       console.log(err);
     });
-  //   console.log(campaigns[params.slug]);
+  console.log(
+    new Date(parseInt(campaigns[params.slug].deadline["_hex"]) * 1000)
+  );
+  // console.log(campaigns[params.slug]);
 
+  // days Remaining
+  // const daysRemaining = (days) => {
+  // const todaysdate = moment()
+  // days = Number((days + '000').slice(0))
+  // days = moment(days).format('YYYY-MM-DD')
+  // days = moment(days)
+  // days = days.diff(todaysdate, 'days')
+  // return days == 1 ? '1 day' : days + ' days'
+  // }
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const campaignId = params.slug;
-    const correctAmount = amount * 100000000 * 10000000;
+    const correctAmount = amount * Math.pow(10, 18);
     const campParams = {
       correctAmount,
       campaignId,
@@ -50,23 +70,16 @@ export default function Page({ params }: { params: { slug: string } }) {
     donateToCampaign(campParams);
   };
 
-  //   //   get investor donations
-  //   //   const donation = getAllDonators(params.slug);
-  //   console.log(
-  //     parseInt(
-  //       "0x42a4fda80000000000000000000000000000000000000000000000000000000000000002"
-  //     )
-  //   );
+  //   get investor donations
+  //   const donation = getAllDonators(params.slug);
+  // console.log(campaigns[params.slug]);
 
   return (
     <>
       {campaigns ? (
         <div className="flex flex-col w-screen px-6 my-5 md:flex-row">
           <div className="flex flex-col w-full px-7 md:w-7/12 mxs:w-full">
-            <img
-              src="https://skywarriorthemes.com/fundingpress/wp-content/uploads/2020/08/1-4-850x530.jpg"
-              alt="image"
-            />
+            <img src={campaigns[params.slug].imageUri} alt="image" />
             <h1 className="text-4xl font-semibold py-6 capitalize">
               {campaigns[params.slug].campaignTitle}
             </h1>
@@ -136,7 +149,46 @@ export default function Page({ params }: { params: { slug: string } }) {
                 Eth
               </span>
             </p>
+            {modal ? (
+              <RequestForm
+                modal={modal}
+                setModal={setModal}
+                limit={convertHexString(
+                  campaigns[params.slug].raisedAmount["_hex"]
+                ).toFixed(2)}
+                id={params.slug}
+              />
+            ) : progressPercentage > 0.5 ? (
+              <button
+                onClick={() => setModal(true)}
+                className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+              >
+                Create Funds Release request
+              </button>
+            ) : (
+              ""
+            )}
 
+            <button
+              onClick={() => {
+                releaseFundsToVendors(params.slug);
+              }}
+              className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+            >
+              Release Funds
+            </button>
+            {campaigns[params.slug].requestCreated ? (
+              <button
+                onClick={() => {
+                  approveFundReleaseRequest(params.slug);
+                }}
+                className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+              >
+                Approve request
+              </button>
+            ) : (
+              ""
+            )}
             <h1 className="py-4 text-2xl font-semibold">
               List of Investors who contributed
             </h1>

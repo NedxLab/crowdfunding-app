@@ -27,7 +27,10 @@ const CampaignForm = ({ setModal }: any) => {
       minAmount,
       description,
     };
+    console.log(params);
+
     createCampaigns(params);
+    setModal(false);
   };
 
   // change date format

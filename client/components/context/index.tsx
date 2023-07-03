@@ -19,7 +19,7 @@ export const StateContextProvider = ({ children }: any) => {
   const router = useRouter();
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
-    const contractAddress = "0xF64c0D86691F235e7a57AB48bA64476c9aBE921F";
+    const contractAddress = "0x8450c43556D2f451bCC7F98144Bd788895b5cd2B";
     const contractAbi = abi.abi;
     let tx;
 
@@ -111,6 +111,8 @@ export const StateContextProvider = ({ children }: any) => {
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
         let _targetAmount = ethers.utils.parseEther(Amount);
+        console.log(_deadline);
+
         tx = await contract.createCampaign(
           _targetAmount,
           _deadline,
@@ -149,7 +151,7 @@ export const StateContextProvider = ({ children }: any) => {
 
         // _campaignId = ethers.utils.parseEther(_campaignId);
         tx = await contract.donateToCampaign(_campaignId, {
-          value: correctAmount,
+          value: ethers.BigNumber.from(correctAmount.toString()),
           gasLimit: gasLimit,
           gasPrice: gasPrice.add(extraGas),
         });
@@ -295,6 +297,8 @@ export const StateContextProvider = ({ children }: any) => {
     // create campaign
     const getCampaigns = async () => {
       if (isDisconnected) {
+        console.log(isDisconnected);
+
         return;
       }
       try {
@@ -342,6 +346,88 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+    // create Fund Release Request
+    const createFundReleaseRequest = async ({
+      id: _campaignId,
+      amount: _requestAmount,
+      address: _vendorAddress,
+    }: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.createFundReleaseRequest(
+          _campaignId,
+          _requestAmount,
+          _vendorAddress,
+          {
+            gasLimit: gasLimit,
+            gasPrice: gasPrice.add(extraGas),
+          }
+        );
+        // await tx.wait();
+        // console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // create Fund Release Request
+    const approveFundReleaseRequest = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.approveFundReleaseRequest(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        // console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // release Funds To Vendors
+    const releaseFundsToVendors = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.releaseFundsToVendors(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        await tx.wait();
+        console.log(tx);
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+
     return (
       <StateContext.Provider
         value={
@@ -357,6 +443,9 @@ export const StateContextProvider = ({ children }: any) => {
             getAllDonations,
             getCampaignsByEntrepreneur,
             getTotalCampaignsByInvestor,
+            createFundReleaseRequest,
+            approveFundReleaseRequest,
+            releaseFundsToVendors,
           } as any
         }
       >

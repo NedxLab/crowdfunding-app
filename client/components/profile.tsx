@@ -21,8 +21,8 @@ const Profile = () => {
     });
   return (
     <>
-      <div className="w-screen flex flex-col items-center justify-around space-y-56">
-        <div className="mt-20 w-11/12 border border-black h-28 text-center flex flex-row flex-wrap justify-evenly items-center mxs:flex-col">
+      <div className="w-screen flex flex-col items-center justify-around">
+        <div className="mt-20 w-11/12 border border-black h-28 text-center flex flex-row flex-wrap justify-evenly items-center mb-10 mxs:flex-col">
           <div className="flex flex-col items-center justify-center w-1/4 h-full  border-r border-black">
             <h1>Successful Campaigns</h1>
             <h1 className="text-2xl font-bold">200</h1>
@@ -42,6 +42,7 @@ const Profile = () => {
             </h1>
           </div>
         </div>
+        <h1 className="text-center font-bold text-2xl">All Campaigns</h1>
         <UserCampaigns />
         <button
           onClick={() => {

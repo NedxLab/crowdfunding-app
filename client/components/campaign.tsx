@@ -33,7 +33,7 @@ const Campaign = ({ title, img, donated, amount }: any) => {
           <h1 className="uppercase">{title}</h1>
 
           <h1 className="text-xs text-[#777575] uppercase my-7">
-            donated: {donatedAmount ? donatedAmount.toFixed(2) : ""}/
+            donated: {donatedAmount ? donatedAmount.toFixed(2) : "0"}/
             <span className="font-bold text-blue-600">{target} </span> ETH
           </h1>
         </div>

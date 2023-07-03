@@ -22,7 +22,7 @@ const UserCampaigns = () => {
   // console.log(campaigns);
 
   return (
-    <div className="flex flex-row items-center justify-center flex-wrap gap-7 mt-28 mb-10 mxs:px-6">
+    <div className="flex flex-row items-center justify-center flex-wrap gap-7 mt-5 mb-10 mxs:px-6">
       {campaigns ? (
         campaigns.map((camp: any, i: any) => (
           <a
