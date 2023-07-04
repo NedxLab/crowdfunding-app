@@ -29,10 +29,11 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <StateContextProvider>
-        <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
-        <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
-      </StateContextProvider>
+      <WagmiConfig config={wagmiConfig}>
+        {" "}
+        <StateContextProvider>{children} </StateContextProvider>
+      </WagmiConfig>
+      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </>
   );
 }

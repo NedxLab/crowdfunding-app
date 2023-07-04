@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useState } from "react";
 import { ICreateCampaign } from "@/types/types";
 import { useContext } from "react";
@@ -181,4 +182,4 @@ const CampaignForm = ({ setModal }: any) => {
   );
 };
 
-export default CampaignForm;
+export default withPageAuthRequired<any>(CampaignForm);

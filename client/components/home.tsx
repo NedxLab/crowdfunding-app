@@ -1,14 +1,47 @@
 "use client";
 
 import Image from "next/image";
-import hero from "../public/hero.jpg";
+import hero from "../public/bloom.jpg";
 import Auth from "./auth";
 import { useEffect, useState } from "react";
 import CampaignForm from "./campaignForm";
+import localFont from "next/font/local";
+import { StateContext } from "./context";
+import { useContext } from "react";
+import { useAccount } from "wagmi";
+
+// FONT DECLARATION
+const myFont = localFont({
+  src: "../public/fonts/Chromatic/GRADPLA.woff2",
+});
+const paraFont = localFont({
+  src: "../public/fonts/Chromatic/Grad.ttf",
+});
 
 export default function Home() {
   const [user, setUser] = useState<string | null>();
   const [modal, setModal] = useState(false);
+  const [category, setCategory] = useState();
+  const [verified, setVerified] = useState();
+  const [loginModal, setLoginModal] = useState(false);
+  const { address } = useAccount();
+
+  const { getUserByAddress }: any = useContext(StateContext);
+
+  if (address) {
+    const checkUSer = getUserByAddress(address);
+    checkUSer
+      .then((res: any) => {
+        setCategory(res.category);
+        setVerified(res.verified);
+        if (address && verified) {
+          setLoginModal(false);
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }
 
   if (typeof window !== "undefined") {
     const userEmail = localStorage.getItem("email");
@@ -25,33 +58,71 @@ export default function Home() {
     return (
       <>
         {" "}
-        {user || userEmail ? (
+        {!loginModal ? (
           modal ? (
             <CampaignForm setModal={setModal} />
           ) : (
-            <div>
+            <div className="bg-[#ece7d5]">
               <div className="-z-50 opacity-50 w-screen h-screen min-w-[100vw] min-h-[100vh] absolute top-0">
-                <Image
+                {/* <Image
                   src={hero}
                   alt="logo"
                   className="-z-50 opacity-50 w-screen h-screen min-w-[100vw] min-h-[100vh] absolute top-0"
-                />
+                /> */}
               </div>
-              <main className="flex  w-screen h-screen min-w-[100vw] min-h-[100vh] flex-col items-center justify-center ">
+              <main className="flex py-32 w-screen h-screen min-w-[100vw] min-h-[100vh] flex-col items-center justify-center ">
+                <div
+                  className=" w-2/3 h-64 py-24 rounded-2xl"
+                  style={{
+                    backgroundImage: `url(${hero.src})`,
+                    backgroundPosition: "center",
+                    backgroundSize: "inherit",
+                  }}
+                ></div>
                 <div className="">
-                  <div className="text-[9vh] text-center col-start-1 col-end-7 mxs:text-[4vh] msm:col-end-13">
-                    The WEB3 CrowdFunding App of the Decade.
+                  <div
+                    className={`${myFont.className} capitalize text-[9vh] font-bold text-center col-start-1 col-end-7 mxs:text-[4vh] msm:col-end-13`}
+                  >
+                    Fund, build and protect what matters.
                   </div>
-                  <h1 className=" opacity-70 uppercase text-center py-4">
-                    Raise funds for your crypto Projects.
+                  <h1
+                    className={`${paraFont.className} font-semibold capitalize text-xl text-center py-4`}
+                  >
+                    From products to protocols, our tools empower community-led
+                    funding and trustworthy digital experiences.
                   </h1>
                 </div>
-                <button
-                  onClick={() => setModal(true)}
-                  className="uppercase bg-blue-600 text-white text-center rounded-md px-5 py-2.5 text-xs"
-                >
-                  Create Campaign
-                </button>
+                {address && verified ? (
+                  category === 0 ? (
+                    <button
+                      onClick={() => setModal(true)}
+                      className=" bg-[#15322b] text-white text-center rounded-md px-5 py-2 text-lg"
+                    >
+                      Create Campaign
+                    </button>
+                  ) : category === 1 ? (
+                    <button className=" bg-[#15322b] text-white text-center rounded-md px-5 py-2 text-lg">
+                      Welcome Investor!
+                    </button>
+                  ) : category === 2 ? (
+                    <button className=" bg-[#15322b] text-white text-center rounded-md px-5 py-2 text-lg">
+                      Welcome Vendor!
+                    </button>
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  <button
+                    onClick={() => {
+                      address
+                        ? setLoginModal(true)
+                        : alert("Connect your Metamask Wallet");
+                    }}
+                    className=" bg-[#15322b] text-white text-center rounded-md px-5 py-2 text-lg"
+                  >
+                    Get Started
+                  </button>
+                )}
               </main>
             </div>
           )

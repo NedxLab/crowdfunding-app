@@ -42,10 +42,10 @@ const Login = () => {
   };
   return (
     <>
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
+      <div className="min-h-screen bg-[rgba(235,235,235,.85)] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <span className="text-red-500">{errorMessage}</span>
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <div className="bg-[#ece7d5] py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form onSubmit={handleSubmit}>
               <div>
                 <label

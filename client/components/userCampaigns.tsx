@@ -27,7 +27,7 @@ const UserCampaigns = () => {
         campaigns.map((camp: any, i: any) => (
           <a
             href={`/campaign/${i}`}
-            className="h-72 xs:w-1/3 md:w-1/4 lg:w-1/5 mxs:w-full"
+            className="h-80 my-2 xs:w-1/3 md:w-1/4 lg:w-1/5 mxs:w-full"
           >
             {" "}
             <Campaign
@@ -36,6 +36,7 @@ const UserCampaigns = () => {
               img={camp.imageUri}
               donated={camp.raisedAmount["_hex"]}
               amount={camp.targetAmount["_hex"]}
+              deadline={camp.deadline["_hex"]}
             />
           </a>
         ))

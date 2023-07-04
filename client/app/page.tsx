@@ -6,9 +6,22 @@ import Campaigns from "@/components/campaigns";
 import Home from "@/components/home";
 import { Web3Button } from "@web3modal/react";
 import Profile from "@/components/profile";
+import { AiOutlineHome } from "react-icons/ai";
+import { MdOutlineCleanHands } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 
 const HomeV5 = () => {
-  const menuData = ["01. Home", "02. Campaigns", "03. Profile"];
+  const menuData = [
+    <div className="flex flex-row items-baseline">
+      <AiOutlineHome className="mx-1" /> Home
+    </div>,
+    <div className="flex flex-row items-baseline">
+      <MdOutlineCleanHands className="mx-1" /> Campaigns
+    </div>,
+    <div className="flex flex-row items-baseline">
+      <FaUserCircle className="mx-1" /> Profile
+    </div>,
+  ];
 
   const settings = {
     swipe: false,

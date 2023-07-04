@@ -7,16 +7,13 @@ import { ICreateCampaign } from "@/types/types";
 import { IRegisterUser } from "@/types/types";
 import { ILoginUser } from "@/types/types";
 import React, { useContext, createContext } from "react";
-import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 
 export const StateContext = createContext(null);
 
 export const StateContextProvider = ({ children }: any) => {
-  const { address, isConnected, isDisconnected } = useAccount();
+  const { isDisconnected } = useAccount();
 
-  // declare next router
-  const router = useRouter();
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
     const contractAddress = "0x8450c43556D2f451bCC7F98144Bd788895b5cd2B";
@@ -57,7 +54,6 @@ export const StateContextProvider = ({ children }: any) => {
         });
         await tx.wait();
         // router.push("/login");
-        console.log(tx);
       } catch (error) {
         reportError(error);
       }
@@ -82,7 +78,7 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         // router.push("/");
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -126,7 +122,6 @@ export const StateContextProvider = ({ children }: any) => {
           }
         );
         await tx.wait();
-        console.log(tx);
       } catch (error) {
         reportError(error);
       }
@@ -157,7 +152,7 @@ export const StateContextProvider = ({ children }: any) => {
         });
 
         await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -182,7 +177,6 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         // await tx.wait();
-        console.log(tx);
         return tx;
       } catch (error) {
         reportError(error);
@@ -234,7 +228,6 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
 
-        console.log(tx);
         return tx;
       } catch (error) {
         reportError(error);
@@ -267,6 +260,28 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+    // get User By Address
+    const getUserByAddress = async (_walltetAddress: any) => {
+      try {
+        if (!ethereum) return alert("Please install Metamask");
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        tx = await contract.getUserByAddress(_walltetAddress, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
     // get Total Campaigns By Investor
     const getTotalCampaignsByInvestor = async ({
       address: _entrepreneur,
@@ -287,7 +302,7 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -315,7 +330,7 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         // await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -340,7 +355,7 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         // await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -373,7 +388,7 @@ export const StateContextProvider = ({ children }: any) => {
           }
         );
         // await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -397,7 +412,7 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         // await tx.wait();
-        // console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -421,7 +436,6 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         await tx.wait();
-        console.log(tx);
         return tx;
       } catch (error) {
         reportError(error);
@@ -446,6 +460,7 @@ export const StateContextProvider = ({ children }: any) => {
             createFundReleaseRequest,
             approveFundReleaseRequest,
             releaseFundsToVendors,
+            getUserByAddress,
           } as any
         }
       >

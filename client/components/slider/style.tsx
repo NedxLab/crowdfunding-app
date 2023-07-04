@@ -21,14 +21,14 @@ const StyleWrapper = styled.div`
     height: 60px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(4px);
-    background: #297ce7;
+    background: #15322b;
 
     li {
       min-height: 60px;
       width: calc(100% / 6);
       display: block;
       transition: background-color 0.6s ease;
-      font-family: "__Ysabeau_c46242";
+      font-family: "__DM_Mono_5b09c7";
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
@@ -134,20 +134,20 @@ export const AuthStyle = styled.section`
     height: 60px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(4px);
-    border-bottom: 1px solid #2196f3;
+    border-bottom: 2px solid black;
 
     li {
       min-height: 60px;
       width: calc(100% / 6);
       display: block;
       transition: background-color 0.6s ease;
-      font-family: "__Ysabeau_c46242";
+      font-family: "__DM_Mono_5b09c7";
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
       line-height: 16px;
       text-transform: uppercase;
-      color: #2196f3;
+      color: black;
       border-right: 1px solid rgba(255, 255, 255, 0.15);
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       margin: 0;
@@ -163,7 +163,7 @@ export const AuthStyle = styled.section`
       }
       &:hover,
       &.slick-active {
-        background: rgb(33 150 243 / 19%);
+        background: #15322ba3;
         backdrop-filter: blur(0px);
       }
     }

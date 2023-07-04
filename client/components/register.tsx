@@ -37,11 +37,11 @@ const Register = () => {
   };
   return (
     <>
-      <section className="antialiased flex flex-col justify-end  bg-gray-100 text-gray-600 min-h-screen py-12 sm:px-6 lg:px-8 px-6">
+      <section className="antialiased flex flex-col justify-end  bg-[rgba(235,235,235,.85)]  text-gray-600 min-h-screen py-12 sm:px-6 lg:px-8 px-6">
         <div className="mt-28 h-full">
           <div>
             <div className="relative px-4 sm:px-6 lg:px-8 pb-8 max-w-lg mx-auto">
-              <div className="bg-white px-8 pb-6 rounded-b shadow-lg">
+              <div className="bg-[#ece7d5] px-8 pb-6 rounded-b shadow-lg">
                 <div className="text-center mb-6">
                   <div className="mb-2"></div>
                   <span className="text-red-500">{errorMessage}</span>

@@ -37,7 +37,7 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
     // This mapping campaign id to map of address contributions
     mapping(uint256 => mapping(address => uint256)) private contributions;
     mapping(uint256 => mapping(address => bool)) private campaignInvestorApprovals;
-   
+
     // Mapping from address to number of campaigns created by the address
     mapping(address => EnumerableSetUpgradeable.UintSet) private _campaignsOwnedByEntrepreneur;
 
@@ -108,7 +108,6 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
     ) external onlyVerifiedUser onlyCategory(Category.Entrepreneur) {
         require(_targetAmount > 0, "Target amount must be greater than zero");
 
-        uint256 deadline = block.timestamp + _deadline;
         Campaign storage campaign = campaigns[campaignIdCounter];
         require(campaign.deadline < block.timestamp, "The campaign must be a date in the future");
         uint256 campaignId = getCampaignCount();
@@ -119,13 +118,13 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         campaign.imageUri = _imageUri;
         campaign.campaignTitle = _campaignTitle;
         campaign.campaignDescription = _campaignDescription;
-        campaign.deadline = deadline;
+        campaign.deadline = _deadline;
         campaign.minimumContribution = minimumContribution;
         campaign.status = CampaignStatus.Ongoing;
         campaignIdCounter++;
 
         _addCampaignToEntrepreneurAddress(msg.sender, campaignId);
-        emit CampaignCreated(campaignIdCounter - 1, msg.sender, _targetAmount, deadline);
+        emit CampaignCreated(campaignIdCounter - 1, msg.sender, _targetAmount, _deadline);
     }
 
     function donateToCampaign(
@@ -215,6 +214,11 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return campaign;
     }
 
+     function getUserByAddress(address _walltetAddress) public view returns (User memory) {
+        User memory user = users[_walltetAddress];
+        return user;
+    }
+
     function getCampaignsByEntrepreneur(address _entrepreneur) public view returns (Campaign[] memory) {
         uint256 campaignIdsCount = _getEntrepreneurCampaignsCount(_entrepreneur);
 
@@ -283,9 +287,8 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
 
         address vendor = campaigns[_campaignId].vendor;
         uint256 amount = campaigns[_campaignId].raisedAmount;
-        payable(vendor).transfer(amount);
+        campaigns[_campaignId].vendor.transfer(amount);
         campaign.status = CampaignStatus.Successful;
-        campaigns[_campaignId].raisedAmount = 0;
         emit FundsReleased(_campaignId, vendor, amount);
     }
 
