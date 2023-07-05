@@ -9,13 +9,20 @@ import localFont from "next/font/local";
 import { StateContext } from "./context";
 import { useContext } from "react";
 import { useAccount } from "wagmi";
+import { PT_Sans, Quicksand } from "next/font/google";
 
 // FONT DECLARATION
 const myFont = localFont({
   src: "../public/fonts/Chromatic/GRADPLA.woff2",
 });
-const paraFont = localFont({
-  src: "../public/fonts/Chromatic/Grad.ttf",
+// const paraFont = localFont({
+//   src: "../public/fonts/Chromatic/Grad.ttf",
+// });
+
+const paraFont = Quicksand({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export default function Home() {
@@ -86,7 +93,7 @@ export default function Home() {
                     Fund, build and protect what matters.
                   </div>
                   <h1
-                    className={`${paraFont.className} font-semibold capitalize text-xl text-center py-4`}
+                    className={`${paraFont.className} font-semibold capitalize text-base text-center py-4`}
                   >
                     From products to protocols, our tools empower community-led
                     funding and trustworthy digital experiences.

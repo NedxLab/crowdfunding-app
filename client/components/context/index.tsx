@@ -236,23 +236,15 @@ export const StateContextProvider = ({ children }: any) => {
     // get Campaigns By Entrepreneur
     const getCampaignsByEntrepreneur = async (address: any) => {
       if (isDisconnected) {
-        return;
+        return alert("Please Connect your wallet");
       }
       try {
         // if (!ethereum) return alert("Please install Metamask");
 
         const contract = await getEtheriumContract();
 
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 1500000;
-        const gasPrice = await provider.getGasPrice();
-        const extraGas = ethers.utils.parseUnits("100", "gwei");
-
         let _entrepreneur = address;
-        tx = await contract.getCampaignsByEntrepreneur(_entrepreneur, {
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
+        tx = await contract.getCampaignsByEntrepreneur(_entrepreneur);
         // await tx.wait();
 
         return tx;
@@ -267,15 +259,7 @@ export const StateContextProvider = ({ children }: any) => {
 
         const contract = await getEtheriumContract();
 
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 1500000;
-        const gasPrice = await provider.getGasPrice();
-        const extraGas = ethers.utils.parseUnits("100", "gwei");
-
-        tx = await contract.getUserByAddress(_walltetAddress, {
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
+        tx = await contract.getUserByAddress(_walltetAddress);
         // await tx.wait();
         return tx;
       } catch (error) {
@@ -297,10 +281,7 @@ export const StateContextProvider = ({ children }: any) => {
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
         // let _targetAmount = ethers.utils.parseEther(Amount);
-        tx = await contract.getTotalCampaignsByInvestor(_entrepreneur, {
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
+        tx = await contract.getTotalCampaignsByInvestor(_entrepreneur);
         await tx.wait();
 
         return tx;
@@ -311,28 +292,20 @@ export const StateContextProvider = ({ children }: any) => {
 
     // create campaign
     const getCampaigns = async () => {
-      if (isDisconnected) {
-        console.log(isDisconnected);
+      // if (isDisconnected) {
+      //   console.log(isDisconnected);
 
-        return;
-      }
+      //   return;
+      // }
       try {
         const contract = await getEtheriumContract();
 
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 1500000;
-        const gasPrice = await provider.getGasPrice();
-        const extraGas = ethers.utils.parseUnits("100", "gwei");
-
-        // let _targetAmount = ethers.utils.parseEther(Amount);
-        tx = await contract.getCampaigns({
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
+        tx = await contract.getCampaigns();
         // await tx.wait();
 
         return tx;
       } catch (error) {
+        console.log(error);
         reportError(error);
       }
     };
@@ -344,16 +317,7 @@ export const StateContextProvider = ({ children }: any) => {
 
         const contract = await getEtheriumContract();
 
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 1500000;
-        const gasPrice = await provider.getGasPrice();
-        const extraGas = ethers.utils.parseUnits("100", "gwei");
-
-        // let _targetAmount = ethers.utils.parseEther(Amount);
-        tx = await contract.getCampaignCount({
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
+        tx = await contract.getCampaignCount();
         // await tx.wait();
 
         return tx;
