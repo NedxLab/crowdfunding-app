@@ -39,7 +39,7 @@ export const StateContextProvider = ({ children }: any) => {
       category: _category,
     }: IRegisterUser) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -64,7 +64,7 @@ export const StateContextProvider = ({ children }: any) => {
       password: _password,
     }: ILoginUser) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -97,7 +97,7 @@ export const StateContextProvider = ({ children }: any) => {
         return;
       }
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -135,7 +135,7 @@ export const StateContextProvider = ({ children }: any) => {
         return;
       }
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -162,7 +162,7 @@ export const StateContextProvider = ({ children }: any) => {
     // get All Donators
     const getAllDonators = async (_campaignId: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -188,7 +188,7 @@ export const StateContextProvider = ({ children }: any) => {
         return;
       }
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -213,7 +213,7 @@ export const StateContextProvider = ({ children }: any) => {
     // get Investor Donations
     const getInvestorDonations = async (_campaignId: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -239,7 +239,7 @@ export const StateContextProvider = ({ children }: any) => {
         return alert("Please Connect your wallet");
       }
       try {
-        // if (!ethereum) return alert("Please install Metamask");
+        // if (!ethereum) return
 
         const contract = await getEtheriumContract();
 
@@ -255,7 +255,7 @@ export const StateContextProvider = ({ children }: any) => {
     // get User By Address
     const getUserByAddress = async (_walltetAddress: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -271,7 +271,7 @@ export const StateContextProvider = ({ children }: any) => {
       address: _entrepreneur,
     }: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -313,7 +313,7 @@ export const StateContextProvider = ({ children }: any) => {
     // get campaign count
     const getCampaignCount = async () => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -332,7 +332,7 @@ export const StateContextProvider = ({ children }: any) => {
       address: _vendorAddress,
     }: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -361,7 +361,7 @@ export const StateContextProvider = ({ children }: any) => {
     // create Fund Release Request
     const approveFundReleaseRequest = async (_campaignId: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
@@ -385,7 +385,7 @@ export const StateContextProvider = ({ children }: any) => {
     // release Funds To Vendors
     const releaseFundsToVendors = async (_campaignId: any) => {
       try {
-        if (!ethereum) return alert("Please install Metamask");
+        if (!ethereum) return;
 
         const contract = await getEtheriumContract();
 
