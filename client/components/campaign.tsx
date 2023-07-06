@@ -46,7 +46,7 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
         <img
           src={img}
           alt="campaigns"
-          className="w-full min-w-full max-w-full h-28 max-h-28 min-h-[7rem]"
+          className="w-full min-w-full max-w-full h-28 max-h-28 min-h-[7rem] xs:w-1/3 md:w-1/3 lg:w-1/4 xl:w-1/5  mxs:w-full"
         />
         <div className="flex flex-col justify-around text-center gap-1">
           <h1 className="uppercase text-sm font-bold">{title.slice(0, 30)}</h1>

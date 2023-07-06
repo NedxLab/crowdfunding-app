@@ -52,7 +52,7 @@ export const StateContextProvider = ({ children }: any) => {
       }
       if (isDisconnected) {
         if (confirm("Please connect your wallet") == true) {
-          open();
+          // open();
         }
       }
       try {
@@ -91,7 +91,7 @@ export const StateContextProvider = ({ children }: any) => {
       }
       if (isDisconnected) {
         if (confirm("Please connect your wallet") == true) {
-          open();
+          // open();
         }
       }
       try {
@@ -135,7 +135,7 @@ export const StateContextProvider = ({ children }: any) => {
       }
       if (isDisconnected) {
         if (confirm("Please connect your wallet") == true) {
-          open();
+          // open();
         }
       }
       try {
@@ -184,7 +184,7 @@ export const StateContextProvider = ({ children }: any) => {
       }
       if (isDisconnected) {
         if (confirm("Please connect your wallet") == true) {
-          open();
+          // open();
         }
       }
       try {

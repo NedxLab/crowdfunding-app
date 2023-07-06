@@ -33,7 +33,7 @@ const StyleWrapper = styled.section`
       font-family: "__DM_Mono_5b09c7";
       font-style: normal;
       font-weight: 400;
-      font-size: 18px;
+      font-size: 0.7rem;
       line-height: 16px;
       text-transform: uppercase;
       color: #ffffff;
@@ -88,7 +88,8 @@ const StyleWrapper = styled.section`
 
       flex-direction: row !important;
       height: 60px;
-      width: 100vw;
+      width: 75vw;
+      left: 0;
       li {
         width: 100%;
       }

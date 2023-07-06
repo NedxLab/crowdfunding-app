@@ -14,11 +14,13 @@ import { MdOutlineCleanHands } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useAccount } from "wagmi";
+import { useWeb3Modal } from "@web3modal/react";
 
 const HomeV5 = () => {
   const [linked, setLinked] = useState("Link Account");
   const [category, setCategory] = useState();
   const [verified, setVerified] = useState();
+  const { open, close } = useWeb3Modal();
   const { getUserByAddress }: any = useContext(StateContext);
   const { address } = useAccount();
   if (address) {
@@ -46,6 +48,9 @@ const HomeV5 = () => {
     </div>,
     <div className="flex flex-row items-baseline">
       <MdOutlineCleanHands className="mx-1" /> Campaigns
+    </div>,
+    <div className="flex flex-row items-baseline">
+      <FaUserCircle className="mx-1" /> Profile
     </div>,
     <div className="flex flex-row items-baseline">
       <FaUserCircle className="mx-1" /> Profile
@@ -93,6 +98,27 @@ const HomeV5 = () => {
         </div>
       ) : (
         ""
+      )}
+      {address ? (
+        <a
+          href="/api/auth/logout"
+          onClick={() => {
+            localStorage.clear();
+            window.dispatchEvent(new Event("storage"));
+          }}
+          className="flex items-center justify-end fixed top-0 right-0 uppercase text-[0.7rem] bg-[#15322b] text-white mx-auto pr-5 text-xs h-[60px] mmd:w-[25vw]"
+        >
+          Log Out
+        </a>
+      ) : (
+        <button
+          onClick={() => {
+            if (confirm("Please connect your wallet") == true) {
+              open();
+            }
+          }}
+          className="flex items-center justify-end fixed top-0 right-0 uppercase text-[0.7rem] bg-[#15322b] text-white mx-auto pr-5 text-xs h-[60px] mmd:w-[25vw]"
+        ></button>
       )}
       <div className="fixed right-0 bottom-0 px-3 py-5">
         <Web3Button />

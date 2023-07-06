@@ -58,39 +58,29 @@ const Profile = () => {
   return (
     <>
       <div className="w-screen flex flex-col items-center justify-around">
-        <div className="mt-20 w-11/12 border border-black h-28 text-center flex flex-row flex-wrap justify-evenly items-center mb-10 mxs:flex-col">
+        <div className="mt-20 w-11/12 text-xs border border-black h-28 text-center flex flex-row flex-wrap justify-evenly items-center mb-10 mxs:flex-col">
           <div className="flex flex-col items-center justify-center w-1/4 h-full  border-r border-black">
             <h1>Successful Campaigns</h1>
-            <h1 className="text-2xl font-bold">
+            <h1 className=" font-bold">
               {" "}
               {campaigns ? campaigns.length : "0"}
             </h1>
           </div>
           <div className="flex flex-col items-center justify-center w-1/4 h-full  border-r border-black">
             <h1>Completed Campaigns</h1>
-            <h1 className="text-2xl font-bold">{finishedCampaigns}</h1>
+            <h1 className=" font-bold">{finishedCampaigns}</h1>
           </div>
           <div className="flex flex-col items-center justify-center w-1/4 h-full  border-r border-black">
             <h1>Donations</h1>
-            <h1 className="text-2xl font-bold">{donations} ETH</h1>
+            <h1 className=" font-bold">{donations} ETH</h1>
           </div>
           <div className="flex flex-col items-center justify-center w-1/4 h-full ">
             <h1>Active Campaigns</h1>
-            <h1 className="text-2xl font-bold">{activeCampaigns}</h1>
+            <h1 className=" font-bold">{activeCampaigns}</h1>
           </div>
         </div>
         <h1 className="text-center font-bold text-2xl">All Campaigns</h1>
         <UserCampaigns />
-        <a
-          href="/api/auth/logout"
-          onClick={() => {
-            localStorage.clear();
-            window.dispatchEvent(new Event("storage"));
-          }}
-          className="uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
-        >
-          Log Out
-        </a>
       </div>
     </>
   );
