@@ -38,10 +38,14 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 rounded-2xl border-[3px] border-[#15322b] p-4 h-80">
-        <img src={img} alt="campaigns" className="h-1/2" />
-        <div className="flex flex-col justify-around px-4 text-center gap-1">
-          <h1 className="uppercase">{title}</h1>
+      <div className="flex flex-col justify-evenly gap-4 rounded-2xl border-[3px] border-[#15322b] p-4 h-80">
+        <img
+          src={img}
+          alt="campaigns"
+          className="w-full min-w-full max-w-full h-28 max-h-28 min-h-[7rem]"
+        />
+        <div className="flex flex-col justify-around text-center gap-1">
+          <h1 className="uppercase">{title.slice(0, 30)}</h1>
           <div className="mx-auto h-3 w-10/12 bg-gray-300 rounded-lg">
             <div
               style={{ width: `${progressPercentage}%` }}

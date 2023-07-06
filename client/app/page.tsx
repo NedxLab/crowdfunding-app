@@ -1,6 +1,7 @@
 "use client";
 
 import { Slider, SliderItem } from "@/components/slider/slider";
+// import Slider from "react-slick";
 import StyleWrapper from "@/components/slider/style";
 import Campaigns from "@/components/campaigns";
 import Home from "@/components/home";

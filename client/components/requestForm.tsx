@@ -9,37 +9,32 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
   const { createFundReleaseRequest }: any = useContext(StateContext);
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
-  const [session, setSession] = useState();
+  const [spinner, setSpinner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
+    setSpinner(true);
     const params: any = {
       id,
       amount,
       address,
     };
     // const response =
-    createFundReleaseRequest(params);
-    setModal(false);
-    // response
-    //   .then((res: any) => {
-    //     if (res === true) {
-    //       setErrorMessage("");
-    //       // console.log(res);
-    //       // setSession(res);
-    //     //   localStorage.setItem("email", email);
-    //     //   window.dispatchEvent(new Event("storage"));
-    //     } else {
-    //       setErrorMessage("Invalid Credentials");
-    //     }
-    //   })
-    //   .catch((err: any) => {
-    //     console.log(err);
-    //   });
-    // console.log(response);
+    const listen = createFundReleaseRequest(params);
+    listen
+      .then((res: any) => {
+        setSpinner(false);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setSpinner(false);
+        setModal(false);
+      });
+    // setModal(false);
   };
   return (
     <>
@@ -103,12 +98,42 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
 
               <div className="mt-6">
                 <span className="block w-full rounded-md shadow-sm">
-                  <button
-                    type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                  >
-                    Create
-                  </button>
+                  {!spinner ? (
+                    <button
+                      type="submit"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                    >
+                      Create
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="w-full  justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out flex flex-row items-center space-x-2"
+                      disabled
+                    >
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Processing...
+                    </button>
+                  )}
                 </span>
               </div>
             </form>

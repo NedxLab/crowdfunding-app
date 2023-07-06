@@ -1,6 +1,8 @@
+"use client";
+
 import styled from "styled-components";
 
-const StyleWrapper = styled.div`
+const StyleWrapper = styled.section`
   position: relative;
   .section_title {
     h2 {

@@ -44,7 +44,8 @@ const Profile = () => {
         </div>
         <h1 className="text-center font-bold text-2xl">All Campaigns</h1>
         <UserCampaigns />
-        <button
+        <a
+          href="/api/auth/logout"
           onClick={() => {
             localStorage.clear();
             window.dispatchEvent(new Event("storage"));
@@ -52,7 +53,7 @@ const Profile = () => {
           className="uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
         >
           Log Out
-        </button>
+        </a>
       </div>
     </>
   );

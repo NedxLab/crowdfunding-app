@@ -6,16 +6,19 @@ import { ethers } from "ethers";
 import { ICreateCampaign } from "@/types/types";
 import { IRegisterUser } from "@/types/types";
 import { ILoginUser } from "@/types/types";
-import React, { useContext, createContext } from "react";
+import React, { useContext, createContext, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { useWeb3Modal } from "@web3modal/react";
 
 export const StateContext = createContext(null);
 
 export const StateContextProvider = ({ children }: any) => {
   const { isDisconnected } = useAccount();
+  const { open, close } = useWeb3Modal();
 
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
+
     const contractAddress = "0x8450c43556D2f451bCC7F98144Bd788895b5cd2B";
     const contractAbi = abi.abi;
     let tx;
@@ -38,6 +41,20 @@ export const StateContextProvider = ({ children }: any) => {
       password: _password,
       category: _category,
     }: IRegisterUser) => {
+      if (!ethereum) {
+        if (
+          confirm(
+            "Please install Metamask extension or open in metamask Dapp"
+          ) == true
+        ) {
+          window.open("https://metamask.io/");
+        }
+      }
+      if (isDisconnected) {
+        if (confirm("Please connect your wallet") == true) {
+          open();
+        }
+      }
       try {
         if (!ethereum) return;
 
@@ -63,6 +80,20 @@ export const StateContextProvider = ({ children }: any) => {
       email: _email,
       password: _password,
     }: ILoginUser) => {
+      if (!ethereum) {
+        if (
+          confirm(
+            "Please install Metamask extension or open in metamask Dapp"
+          ) == true
+        ) {
+          window.open("https://metamask.io/");
+        }
+      }
+      if (isDisconnected) {
+        if (confirm("Please connect your wallet") == true) {
+          open();
+        }
+      }
       try {
         if (!ethereum) return;
 
@@ -93,8 +124,19 @@ export const StateContextProvider = ({ children }: any) => {
       minAmount: minimumContribution,
       description: _campaignDescription,
     }: ICreateCampaign) => {
+      if (!ethereum) {
+        if (
+          confirm(
+            "Please install Metamask extension or open in metamask Dapp"
+          ) == true
+        ) {
+          window.open("https://metamask.io/");
+        }
+      }
       if (isDisconnected) {
-        return;
+        if (confirm("Please connect your wallet") == true) {
+          open();
+        }
       }
       try {
         if (!ethereum) return;
@@ -131,8 +173,19 @@ export const StateContextProvider = ({ children }: any) => {
       correctAmount,
       campaignId: _campaignId,
     }: any) => {
+      if (!ethereum) {
+        if (
+          confirm(
+            "Please install Metamask extension or open in metamask Dapp"
+          ) == true
+        ) {
+          window.open("https://metamask.io/");
+        }
+      }
       if (isDisconnected) {
-        return;
+        if (confirm("Please connect your wallet") == true) {
+          open();
+        }
       }
       try {
         if (!ethereum) return;
@@ -198,12 +251,8 @@ export const StateContextProvider = ({ children }: any) => {
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
         // let _targetAmount = ethers.utils.parseEther(Amount);
-        tx = await contract.getAllDonations(_campaignId, {
-          gasLimit: gasLimit,
-          gasPrice: gasPrice.add(extraGas),
-        });
-        // await tx.wait();
-        console.log(parseInt(tx));
+        tx = await contract.getAllDonations(_campaignId);
+
         return tx;
       } catch (error) {
         reportError(error);
@@ -236,7 +285,7 @@ export const StateContextProvider = ({ children }: any) => {
     // get Campaigns By Entrepreneur
     const getCampaignsByEntrepreneur = async (address: any) => {
       if (isDisconnected) {
-        return alert("Please Connect your wallet");
+        return;
       }
       try {
         // if (!ethereum) return
@@ -400,6 +449,8 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         await tx.wait();
+        console.log(tx);
+
         return tx;
       } catch (error) {
         reportError(error);
