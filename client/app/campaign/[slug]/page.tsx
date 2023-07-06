@@ -165,7 +165,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       {campaigns ? (
         <>
           {" "}
-          <h1 className={`"text-4xl font-bold text-center py-8`}>
+          <h1 className="text-4xl font-bold text-center py-8">
             Campaign Details
           </h1>
           <div
