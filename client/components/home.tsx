@@ -10,6 +10,7 @@ import { StateContext } from "./context";
 import { useContext } from "react";
 import { useAccount } from "wagmi";
 import { PT_Sans, Quicksand } from "next/font/google";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 // FONT DECLARATION
 const myFont = localFont({
@@ -49,7 +50,8 @@ export default function Home() {
         console.log(err);
       });
   }
-
+  // get user social account
+  const { user: account } = useUser();
   if (typeof window !== "undefined") {
     const userEmail = localStorage.getItem("email");
 
@@ -62,6 +64,17 @@ export default function Home() {
         setUser(userEmail);
       });
     }, [user]);
+
+    // check if user account is linked
+    const checkLogin = () => {
+      if (account) {
+        setModal(true);
+      } else {
+        if (confirm("Please connect a social account to continue") == true) {
+          window.open("/api/auth/login");
+        }
+      }
+    };
     return (
       <>
         {" "}
@@ -102,7 +115,7 @@ export default function Home() {
                 {address && verified ? (
                   category === 0 ? (
                     <button
-                      onClick={() => setModal(true)}
+                      onClick={checkLogin}
                       className=" bg-[#15322b] text-white text-center rounded-md px-5 py-2 text-lg"
                     >
                       Create Campaign

@@ -31,21 +31,25 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
   }, [donated, amount]);
 
   // days Remaining
-  const days = (
+  const date =
     (new Date(parseInt(deadline) * 1000).getTime() - new Date().getTime()) /
-    (1000 * 60 * 60 * 24)
-  ).toFixed();
+    (1000 * 60 * 60 * 24);
+  const days = date > 0 ? date.toFixed() : "Campaign not ongoing";
+  // (
+  //   (new Date(parseInt(deadline) * 1000).getTime() - new Date().getTime()) /
+  //   (1000 * 60 * 60 * 24)
+  // ).toFixed();
 
   return (
     <>
-      <div className="flex flex-col justify-evenly gap-4 rounded-2xl border-[3px] border-[#15322b] p-4 h-80">
+      <div className="flex flex-col justify-between  rounded-2xl border-[3px] border-[#15322b] p-4 h-80 w-full">
         <img
           src={img}
           alt="campaigns"
           className="w-full min-w-full max-w-full h-28 max-h-28 min-h-[7rem]"
         />
         <div className="flex flex-col justify-around text-center gap-1">
-          <h1 className="uppercase">{title.slice(0, 30)}</h1>
+          <h1 className="uppercase text-sm font-bold">{title.slice(0, 30)}</h1>
           <div className="mx-auto h-3 w-10/12 bg-gray-300 rounded-lg">
             <div
               style={{ width: `${progressPercentage}%` }}
@@ -59,7 +63,11 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
               <h1>
                 <span className="font-bold text-blue-600">{days} </span>
               </h1>
-              <h1 className="text-xs text-[#777575] uppercase">Days left</h1>
+              {date > 0 ? (
+                <h1 className="text-xs text-[#777575] uppercase">Days left</h1>
+              ) : (
+                ""
+              )}
             </div>
             <div className="flex flex-col">
               <h1>
@@ -70,10 +78,10 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
               <h1 className="text-xs text-[#777575] uppercase ">donated</h1>
             </div>
           </div>
+          <button className="text-sm border-[3px] border-[#15322b] px-2 py-1 rounded-xl">
+            View Campaign
+          </button>
         </div>
-        <button className="text-sm border-[3px] border-[#15322b] px-2 py-1 rounded-xl">
-          View Campaign
-        </button>
       </div>
     </>
   );

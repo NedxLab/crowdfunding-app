@@ -395,8 +395,9 @@ export default function Page({ params }: { params: { slug: string } }) {
                 List of Investors who contributed
               </h1>
               {campaigns[params.slug].investors > 0 ? (
-                <div className="flex flex-row">
+                <div className="flex flex-row text-xs">
                   <div>
+                    <h1 className="py-2">Wallet Address</h1>
                     {campaigns[params.slug].investors.map(
                       (investor: any, i: number) => (
                         <h1
@@ -409,6 +410,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     )}
                   </div>
                   <div>
+                    <h1 className="py-2">Amount </h1>
                     {donations && donations.length > 0
                       ? donations.map((amountD: any, i: number) => (
                           <h1

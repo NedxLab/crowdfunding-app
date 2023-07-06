@@ -20,12 +20,12 @@ const Campaigns = () => {
   // console.log(campaigns);
 
   return (
-    <div className="flex flex-row items-center justify-center flex-wrap gap-7 mt-28 mb-10 mxs:px-6">
+    <div className="flex flex-row items-center justify-startn flex-wrap gap-7 mt-28 mb-10 px-10 mxs:px-6">
       {campaigns ? (
         campaigns.map((camp: any, i: any) => (
           <a
             href={`/campaign/${i}`}
-            className="h-80 my-2 xs:w-1/3 md:w-1/4 lg:w-1/5 mxs:w-full"
+            className="h-80 my-2 xs:w-1/3 md:w-1/3 lg:w-1/4 xl:w-1/5  mxs:w-full"
           >
             {" "}
             <Campaign

@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Slider, SliderItem } from "@/components/slider/slider";
-// import Slider from "react-slick";
+import { useContext } from "react";
+import { StateContext } from "@/components/context";
 import StyleWrapper from "@/components/slider/style";
 import Campaigns from "@/components/campaigns";
 import Home from "@/components/home";
@@ -10,8 +12,34 @@ import Profile from "@/components/profile";
 import { AiOutlineHome } from "react-icons/ai";
 import { MdOutlineCleanHands } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { useAccount } from "wagmi";
 
 const HomeV5 = () => {
+  const [linked, setLinked] = useState("Link Account");
+  const [category, setCategory] = useState();
+  const [verified, setVerified] = useState();
+  const { getUserByAddress }: any = useContext(StateContext);
+  const { address } = useAccount();
+  if (address) {
+    const checkUSer = getUserByAddress(address);
+    checkUSer
+      .then((res: any) => {
+        setCategory(res.category);
+        setVerified(res.verified);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }
+
+  const { user } = useUser();
+  useEffect(() => {
+    if (user) {
+      setLinked("Account linked");
+    }
+  }, [user]);
+
   const menuData = [
     <div className="flex flex-row items-baseline">
       <AiOutlineHome className="mx-1" /> Home
@@ -54,6 +82,18 @@ const HomeV5 = () => {
           </SliderItem>
         </Slider>
       </StyleWrapper>
+      {category === 0 && verified ? (
+        <div className="fixed right-0 top-[49px] px-3 py-5">
+          <a
+            href="/api/auth/login "
+            className="bg-blue-500 text-xs px-3 py-1.5 text-white rounded-xl"
+          >
+            {linked}
+          </a>
+        </div>
+      ) : (
+        ""
+      )}
       <div className="fixed right-0 bottom-0 px-3 py-5">
         <Web3Button />
       </div>
