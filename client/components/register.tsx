@@ -142,18 +142,6 @@ const Register = () => {
                         Register Now
                       </button>
                     </div>
-                    <div className="text-xs text-gray-500 italic text-center">
-                      Already have an account?
-                      <span className="mt-2 text-center text-sm leading-5 text-[#297ce7] max-w">
-                        <Link
-                          href="/login"
-                          className="font-medium text-[#297ce7] hover:text-[#297ce7] focus:outline-none focus:underline transition ease-in-out duration-150"
-                        >
-                          {" "}
-                          login
-                        </Link>
-                      </span>
-                    </div>
                   </div>
                 </form>
               </div>

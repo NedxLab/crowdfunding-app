@@ -19,7 +19,7 @@ export const StateContextProvider = ({ children }: any) => {
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
 
-    const contractAddress = "0x8450c43556D2f451bCC7F98144Bd788895b5cd2B";
+    const contractAddress = "0x58298cD7AB19A2202F6804F6aEFc5AF267b88c78";
     const contractAbi = abi.abi;
     let tx;
 
