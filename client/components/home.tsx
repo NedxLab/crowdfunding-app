@@ -71,7 +71,7 @@ export default function Home() {
         setModal(true);
       } else {
         if (confirm("Please connect a social account to continue") == true) {
-          window.open("/api/auth/login");
+          location.replace("/api/auth/login");
         }
       }
     };

@@ -6,18 +6,20 @@ import { useState } from "react";
 import { ILoginUser } from "@/types/types";
 import { useContext } from "react";
 import { StateContext } from "./context";
+import Spinner from "./spinner";
 
-const Login = () => {
+const Login = ({ next }: any) => {
   const { loginUSer }: any = useContext(StateContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [session, setSession] = useState();
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
+    setLoading(true);
     const params: ILoginUser = {
       email,
       password,
@@ -27,16 +29,15 @@ const Login = () => {
       .then((res: any) => {
         if (res === true) {
           setErrorMessage("");
-          // console.log(res);
-          // setSession(res);
-          localStorage.setItem("email", email);
-          window.dispatchEvent(new Event("storage"));
         } else {
           setErrorMessage("Invalid Credentials");
         }
       })
       .catch((err: any) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
     // console.log(response);
   };
@@ -101,33 +102,6 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember_me"
-                    name="remember"
-                    type="checkbox"
-                    value="1"
-                    className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                  />
-                  <label
-                    htmlFor="remember_me"
-                    className="ml-2 block text-sm leading-5 text-gray-900"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm leading-5">
-                  <a
-                    href="#"
-                    className="font-medium text-[#297ce7] hover:text-[#297ce7] focus:outline-none focus:underline transition ease-in-out duration-150"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-
               <div className="mt-6">
                 <span className="block w-full rounded-md shadow-sm">
                   <button
@@ -142,6 +116,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {loading ? <Spinner /> : ""}
     </>
   );
 };

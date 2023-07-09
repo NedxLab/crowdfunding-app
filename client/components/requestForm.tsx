@@ -4,24 +4,38 @@ import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { StateContext } from "./context";
+import Spinner from "./spinner";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const RequestForm = ({ modal, setModal, limit, id }: any) => {
-  const { createFundReleaseRequest }: any = useContext(StateContext);
+  const { getUserByAddress, createFundReleaseRequest }: any =
+    useContext(StateContext);
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [verified, setVerified] = useState(false);
+  const { user } = useUser();
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    setSpinner(true);
+
     const params: any = {
       id,
       amount,
       address,
     };
-    // const response =
+
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
+    if (!verified) {
+      return;
+    }
+    setSpinner(true);
     const listen = createFundReleaseRequest(params);
     listen
       .then((res: any) => {
@@ -35,6 +49,28 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
         setModal(false);
       });
     // setModal(false);
+  };
+
+  // check verfied vendor address
+  const checkVendor = (vendorAddress: string) => {
+    const checkUSer = getUserByAddress(vendorAddress);
+    setAddress(vendorAddress);
+    checkUSer
+      .then((res: any) => {
+        setVerified(res.verified);
+        // if (!verified) {
+        //   setErrorMessage("please input a registered vendor address");
+        // } else {
+        setErrorMessage("");
+        // }
+        console.log(res);
+      })
+      .catch((err: any) => {
+        setVerified(false);
+        setErrorMessage("please input a registered vendor address");
+
+        console.log(err);
+      });
   };
   return (
     <>
@@ -90,7 +126,7 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
                     type="text"
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     value={address}
-                    onChange={(event) => setAddress(event.target.value)}
+                    onChange={(event) => checkVendor(event.target.value)}
                     required
                   />
                 </div>
@@ -98,48 +134,19 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
 
               <div className="mt-6">
                 <span className="block w-full rounded-md shadow-sm">
-                  {!spinner ? (
-                    <button
-                      type="submit"
-                      className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                    >
-                      Create
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="w-full  justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out flex flex-row items-center space-x-2"
-                      disabled
-                    >
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Processing...
-                    </button>
-                  )}
+                  <button
+                    type="submit"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-[#297ce7] hover:border-[#297ce7] hover:border hover:bg-white hover:text-[#297ce7] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  >
+                    Create
+                  </button>
                 </span>
               </div>
             </form>
           </div>
         </div>
       </div>
+      {spinner ? <Spinner /> : ""}
     </>
   );
 };

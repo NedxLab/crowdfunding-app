@@ -7,6 +7,7 @@ import { ICreateCampaign } from "@/types/types";
 import { useContext } from "react";
 import { StateContext } from "./context";
 import { FaTimes } from "react-icons/fa";
+import Spinner from "./spinner";
 
 const CampaignForm = ({ setModal }: any) => {
   const { createCampaigns }: any = useContext(StateContext);
@@ -17,9 +18,11 @@ const CampaignForm = ({ setModal }: any) => {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [minAmount, setMinAmount] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
+    setLoading(true);
     const params: ICreateCampaign = {
       title,
       date: toTimestamp(date),
@@ -28,10 +31,19 @@ const CampaignForm = ({ setModal }: any) => {
       minAmount,
       description,
     };
-    console.log(params);
 
-    createCampaigns(params);
-    setModal(false);
+    const listen = createCampaigns(params);
+    listen
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    // setModal(false);
   };
 
   // change date format
@@ -178,6 +190,7 @@ const CampaignForm = ({ setModal }: any) => {
           </div>
         </div>
       </section>
+      {loading ? <Spinner /> : ""}
     </>
   );
 };

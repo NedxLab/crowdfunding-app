@@ -87,7 +87,7 @@ const HomeV5 = () => {
           </SliderItem>
         </Slider>
       </StyleWrapper>
-      {category === 0 && verified ? (
+      {verified ? (
         <div className="fixed right-0 top-[49px] px-3 py-5">
           <a
             href="/api/auth/login "

@@ -8,6 +8,9 @@ import RequestForm from "@/components/requestForm";
 import { useAccount } from "wagmi";
 import { Web3Button } from "@web3modal/react";
 import { Montserrat } from "next/font/google";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { BsArrowBarLeft } from "react-icons/bs";
+import Spinner from "@/components/spinner";
 
 const quicksand = Montserrat({
   weight: ["300", "400", "500", "600", "700"],
@@ -30,6 +33,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     releaseFundsToVendors,
     getUserByAddress,
     getAllDonations,
+    confirmFundsReceived,
   }: any = useContext(StateContext);
   const [amount, setAmount] = useState<any>();
   const [modal, setModal] = useState(false);
@@ -37,7 +41,8 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [contSpin, setContSpin] = useState(false);
   const [approveSpin, setApproveSpin] = useState(false);
   const [releaseSpin, setReleaseSpin] = useState(false);
-  const [text, setText] = useState("Release Funds");
+  const [loader, setLoader] = useState(false);
+  const { user } = useUser();
 
   // convert hex string
   const convertHexString = (value: string) => {
@@ -88,6 +93,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         console.log(err);
       });
   }
+
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
@@ -98,6 +104,12 @@ export default function Page({ params }: { params: { slug: string } }) {
       correctAmount,
       campaignId,
     };
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
     const listen = donateToCampaign(campParams);
     listen
       .then((res: any) => {
@@ -117,6 +129,12 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   // approve funds
   const approveFunds = () => {
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
     const listen = approveFundReleaseRequest(params.slug);
     setApproveSpin(true);
     listen
@@ -133,6 +151,12 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   // release funds
   const releaseFunds = () => {
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
     const listen = releaseFundsToVendors(params.slug);
     setReleaseSpin(true);
     listen
@@ -151,6 +175,30 @@ export default function Page({ params }: { params: { slug: string } }) {
       });
   };
 
+  const confirmFunds = () => {
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
+    const listen = confirmFundsReceived(params.slug);
+    setLoader(true);
+    listen
+      .then((res: any) => {
+        setLoader(false);
+        // if (res.status === 200) {
+        //   setText("Released!");
+        // }
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
+  };
   // days Remaining
   const days = (
     (new Date(
@@ -160,11 +208,30 @@ export default function Page({ params }: { params: { slug: string } }) {
     (1000 * 60 * 60 * 24)
   ).toFixed();
 
+  // check if user account is linked
+  const checkLogin = () => {
+    if (user) {
+      setModal(true);
+    } else {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+    }
+  };
+
+  // console.log(campaigns[params.slug]);
+
   return (
     <>
       {campaigns ? (
         <>
           {" "}
+          <a
+            href="/"
+            className="fixed top-3 left-3 flex flex-row items-center bg-[#15322b] text-white px-2 py-1"
+          >
+            <BsArrowBarLeft /> <p>back to home</p>
+          </a>
           <h1 className="text-4xl font-bold text-center py-8">
             Campaign Details
           </h1>
@@ -205,67 +272,43 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <div className="text-xl font-bold">{days} Days left</div>
               </span>
               {category === 1 ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="mt-6">
-                    <label
-                      htmlFor="Amount"
-                      className="block text-sm font-medium leading-5 text-gray-700"
-                    >
-                      Amount
-                    </label>
-                    <div className="mt-1 rounded-md shadow-sm">
-                      <input
-                        id="Amount"
-                        name="amount"
-                        type="number"
-                        min={parseInt(
-                          campaigns[params.slug].minimumContribution["_hex"]
-                        )}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                        value={amount}
-                        onChange={(event) => setAmount(event.target.value)}
-                        required
-                      />
+                progressPercentage >= 100 ? (
+                  <button className="px-3 py-2 my-3 bg-green-600 text-white">
+                    Campaign is fully funded
+                  </button>
+                ) : (
+                  <form onSubmit={handleSubmit}>
+                    <div className="mt-6">
+                      <label
+                        htmlFor="Amount"
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
+                        Amount
+                      </label>
+                      <div className="mt-1 rounded-md shadow-sm">
+                        <input
+                          id="Amount"
+                          name="amount"
+                          type="number"
+                          min={parseInt(
+                            campaigns[params.slug].minimumContribution["_hex"]
+                          )}
+                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          value={amount}
+                          onChange={(event) => setAmount(event.target.value)}
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-
-                  {!contSpin ? (
                     <button
                       type="submit"
                       className="px-3 py-2 my-3 bg-blue-600 text-white"
                     >
                       CONTRIBUTE
                     </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="px-3 py-2 my-3 bg-blue-600 text-white flex flex-row items-center space-x-2"
-                      disabled
-                    >
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Processing...
-                    </button>
-                  )}
-                </form>
+                    {!contSpin ? "" : <Spinner />}
+                  </form>
+                )
               ) : (
                 <button className="px-3 py-2 my-3 bg-blue-600 text-white">
                   Only Investors can Contribute
@@ -287,7 +330,10 @@ export default function Page({ params }: { params: { slug: string } }) {
                   ).toFixed(2)}
                   id={params.slug}
                 />
-              ) : progressPercentage > 50 && category === 0 && verified ? (
+              ) : progressPercentage > 50 &&
+                category === 0 &&
+                verified &&
+                campaigns[params.slug].entrepreneur === address ? (
                 <button
                   onClick={() => setModal(true)}
                   className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
@@ -298,45 +344,17 @@ export default function Page({ params }: { params: { slug: string } }) {
                 ""
               )}
               {address && verified ? (
-                category === 0 && campaigns[params.slug].requestCreated ? (
-                  !releaseSpin ? (
-                    <button
-                      onClick={releaseFunds}
-                      className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
-                    >
-                      {text}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs flex flex-row items-center space-x-2"
-                      disabled
-                    >
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Processing...
-                    </button>
-                  )
+                category === 0 &&
+                campaigns[params.slug].requestCreated &&
+                campaigns[params.slug].entrepreneur === address ? (
+                  <button
+                    onClick={releaseFunds}
+                    className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                  >
+                    Release Funds
+                  </button>
                 ) : category === 1 && campaigns[params.slug].requestCreated ? (
-                  !approveSpin ? (
+                  campaigns[params.slug].investors.includes(address) ? (
                     <button
                       onClick={approveFunds}
                       className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
@@ -344,36 +362,27 @@ export default function Page({ params }: { params: { slug: string } }) {
                       Approve request
                     </button>
                   ) : (
-                    <button
-                      type="button"
-                      className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs flex flex-row items-center space-x-2"
-                      disabled
-                    >
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Processing...
-                    </button>
+                    ""
                   )
                 ) : (
                   ""
+                )
+              ) : (
+                ""
+              )}
+              {campaigns[params.slug].vendor === address &&
+              campaigns[params.slug].status === 1 ? (
+                campaigns[params.slug].fundsReceived ? (
+                  <button className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs">
+                    Confirmed
+                  </button>
+                ) : (
+                  <button
+                    onClick={confirmFunds}
+                    className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                  >
+                    Confirms funds received
+                  </button>
                 )
               ) : (
                 ""
@@ -428,6 +437,9 @@ export default function Page({ params }: { params: { slug: string } }) {
               )}
             </div>
           </div>
+          {!approveSpin ? "" : <Spinner />}
+          {!releaseSpin ? "" : <Spinner />}
+          {!loader ? "" : <Spinner />}
         </>
       ) : (
         ""

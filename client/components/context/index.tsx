@@ -71,6 +71,7 @@ export const StateContextProvider = ({ children }: any) => {
         });
         await tx.wait();
         // router.push("/login");
+        return tx;
       } catch (error) {
         reportError(error);
       }
@@ -149,7 +150,6 @@ export const StateContextProvider = ({ children }: any) => {
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
         let _targetAmount = ethers.utils.parseEther(Amount);
-        console.log(_deadline);
 
         tx = await contract.createCampaign(
           _targetAmount,
@@ -164,6 +164,7 @@ export const StateContextProvider = ({ children }: any) => {
           }
         );
         await tx.wait();
+        return tx;
       } catch (error) {
         reportError(error);
       }
@@ -431,6 +432,30 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+    // confirm Funds Received
+    const confirmFundsReceived = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return;
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.confirmFundsReceived(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
     // release Funds To Vendors
     const releaseFundsToVendors = async (_campaignId: any) => {
       try {
@@ -476,6 +501,7 @@ export const StateContextProvider = ({ children }: any) => {
             approveFundReleaseRequest,
             releaseFundsToVendors,
             getUserByAddress,
+            confirmFundsReceived,
           } as any
         }
       >

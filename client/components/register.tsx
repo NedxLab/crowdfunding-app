@@ -6,8 +6,9 @@ import { useState } from "react";
 import { IRegisterUser } from "@/types/types";
 import { useContext } from "react";
 import { StateContext } from "./context";
+import Spinner from "./spinner";
 
-const Register = () => {
+const Register = ({ previous }: any) => {
   // retrieve registuser function from context
   const { registerUSer }: any = useContext(StateContext);
 
@@ -16,10 +17,12 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [category, setCategory] = useState<string>("0");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // handle submits
   const handleSubmit = (event: any) => {
     event.preventDefault();
+    setLoading(true);
     if (confirmPassword !== password) {
       setErrorMessage(`Passwords do not match`);
       return;
@@ -33,7 +36,19 @@ const Register = () => {
       password,
       category,
     };
-    registerUSer(params);
+    const listen = registerUSer(params);
+    listen
+      .then((res: any) => {
+        console.log(res);
+        previous();
+      })
+      .catch((err: any) => {
+        console.log(err);
+        setErrorMessage("An error occurred");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   return (
     <>
@@ -149,6 +164,7 @@ const Register = () => {
           </div>
         </div>
       </section>
+      {loading ? <Spinner /> : ""}
     </>
   );
 };
