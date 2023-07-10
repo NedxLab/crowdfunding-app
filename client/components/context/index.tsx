@@ -456,6 +456,56 @@ export const StateContextProvider = ({ children }: any) => {
         reportError(error);
       }
     };
+    // decline Fund Release
+    const declineFundRelease = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return;
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.declineFundRelease(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        await tx.wait();
+        console.log(tx);
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // withdraw Funds
+    const withdrawFunds = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return;
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.withdrawFunds(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        await tx.wait();
+        console.log(tx);
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
     // release Funds To Vendors
     const releaseFundsToVendors = async (_campaignId: any) => {
       try {
@@ -502,6 +552,8 @@ export const StateContextProvider = ({ children }: any) => {
             releaseFundsToVendors,
             getUserByAddress,
             confirmFundsReceived,
+            declineFundRelease,
+            withdrawFunds,
           } as any
         }
       >

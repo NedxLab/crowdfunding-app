@@ -23,6 +23,7 @@ const CampaignForm = ({ setModal }: any) => {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     setLoading(true);
+
     const params: ICreateCampaign = {
       title,
       date: toTimestamp(date),
@@ -36,6 +37,7 @@ const CampaignForm = ({ setModal }: any) => {
     listen
       .then((res: any) => {
         console.log(res);
+        setModal(false);
       })
       .catch((err: any) => {
         console.log(err);
@@ -45,7 +47,7 @@ const CampaignForm = ({ setModal }: any) => {
       });
     // setModal(false);
   };
-
+  console.log(loading);
   // change date format
   const toTimestamp = (dateStr: typeof date) => {
     const dateObj = Date.parse(dateStr);

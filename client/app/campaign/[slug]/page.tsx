@@ -34,6 +34,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     getUserByAddress,
     getAllDonations,
     confirmFundsReceived,
+    declineFundRelease,
+    withdrawFunds,
   }: any = useContext(StateContext);
   const [amount, setAmount] = useState<any>();
   const [modal, setModal] = useState(false);
@@ -41,6 +43,8 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [contSpin, setContSpin] = useState(false);
   const [approveSpin, setApproveSpin] = useState(false);
   const [releaseSpin, setReleaseSpin] = useState(false);
+  const [declineSpin, setDeclineSpin] = useState(false);
+  const [witdrawSpin, setWithdrawSpin] = useState(false);
   const [loader, setLoader] = useState(false);
   const { user } = useUser();
 
@@ -148,6 +152,27 @@ export default function Page({ params }: { params: { slug: string } }) {
         setApproveSpin(false);
       });
   };
+  // approve funds
+  const declineRelease = () => {
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
+    const listen = declineFundRelease(params.slug);
+    setDeclineSpin(true);
+    listen
+      .then((res: any) => {
+        setDeclineSpin(false);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setDeclineSpin(false);
+      });
+  };
 
   // release funds
   const releaseFunds = () => {
@@ -175,6 +200,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       });
   };
 
+  // confimr funds received
   const confirmFunds = () => {
     if (!user) {
       if (confirm("Please connect a social account to continue") == true) {
@@ -199,6 +225,32 @@ export default function Page({ params }: { params: { slug: string } }) {
         setLoader(false);
       });
   };
+
+  // withdraw funds by investor
+  const withdraw = () => {
+    if (!user) {
+      if (confirm("Please connect a social account to continue") == true) {
+        location.replace("/api/auth/login");
+      }
+      return;
+    }
+    const listen = withdrawFunds(params.slug);
+    setWithdrawSpin(true);
+    listen
+      .then((res: any) => {
+        setWithdrawSpin(false);
+        // if (res.status === 200) {
+        //   setText("Released!");
+        // }
+        console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setWithdrawSpin(false);
+      });
+  };
   // days Remaining
   const days = (
     (new Date(
@@ -218,8 +270,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       }
     }
   };
-
-  // console.log(campaigns[params.slug]);
 
   return (
     <>
@@ -321,6 +371,18 @@ export default function Page({ params }: { params: { slug: string } }) {
                   Eth
                 </span>
               </p>
+              {category === 1 &&
+              progressPercentage < 100 &&
+              parseInt(days) <= 0 ? (
+                <button
+                  onClick={withdraw}
+                  className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                >
+                  Withdraw funds
+                </button>
+              ) : (
+                ""
+              )}
               {modal ? (
                 <RequestForm
                   modal={modal}
@@ -355,12 +417,20 @@ export default function Page({ params }: { params: { slug: string } }) {
                   </button>
                 ) : category === 1 && campaigns[params.slug].requestCreated ? (
                   campaigns[params.slug].investors.includes(address) ? (
-                    <button
-                      onClick={approveFunds}
-                      className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
-                    >
-                      Approve request
-                    </button>
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <button
+                        onClick={approveFunds}
+                        className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                      >
+                        Approve request
+                      </button>
+                      <button
+                        onClick={declineRelease}
+                        className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                      >
+                        Decline request
+                      </button>
+                    </div>
                   ) : (
                     ""
                   )
@@ -439,6 +509,8 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
           {!approveSpin ? "" : <Spinner />}
           {!releaseSpin ? "" : <Spinner />}
+          {!declineSpin ? "" : <Spinner />}
+          {!witdrawSpin ? "" : <Spinner />}
           {!loader ? "" : <Spinner />}
         </>
       ) : (

@@ -214,7 +214,7 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return campaign;
     }
 
-     function getUserByAddress(address _walltetAddress) public view returns (User memory) {
+    function getUserByAddress(address _walltetAddress) public view returns (User memory) {
         User memory user = users[_walltetAddress];
         return user;
     }
@@ -292,7 +292,9 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         emit FundsReleased(_campaignId, vendor, amount);
     }
 
-    function confirmFundsReceived(uint _campaignId) external onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Vendor) {
+    function confirmFundsReceived(
+        uint _campaignId
+    ) external onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Vendor) {
         Campaign storage campaign = campaigns[_campaignId];
 
         require(campaign.vendor == msg.sender, "Only the campaign vendor can confirm funds received.");
@@ -302,6 +304,39 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         campaign.fundsReceived = true;
 
         emit FundsReceived(_campaignId);
+    }
+
+    function withdrawFunds(
+        uint256 _campaignId
+    ) external onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Investor) {
+        Campaign storage campaign = campaigns[_campaignId];
+
+        require(contributions[_campaignId][msg.sender] > 0, "You have not contributed to this campaign.");
+        require(campaign.status == CampaignStatus.Expired, "Campaign has not expired yet.");
+        require(campaign.deadline < block.timestamp, "Campaign deadline has not passed yet.");
+
+        uint256 amountToWithdraw = contributions[_campaignId][msg.sender];
+        console.log(amountToWithdraw, "amountToWithdraw");
+        contributions[_campaignId][msg.sender] = 0;
+        campaign.raisedAmount -= amountToWithdraw;
+
+        payable(msg.sender).transfer(amountToWithdraw);
+
+        emit FundsWithdrawn(_campaignId, msg.sender);
+    }
+
+    function declineFundRelease(
+        uint256 _campaignId
+    ) external onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Investor) {
+        Campaign storage campaign = campaigns[_campaignId];
+
+        require(campaign.status == CampaignStatus.Ongoing, "Campaign is not ongoing");
+        require(contributions[_campaignId][msg.sender] > 0, "Only investors can decline a request");
+        require(_isRequestCreated(campaign), "No request exists for this campaign");
+
+        campaignInvestorApprovals[_campaignId][msg.sender] = false;
+
+        emit FundReleaseDeclined(_campaignId);
     }
 
     /*********************** Internal methods *******************/
@@ -337,9 +372,10 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return approvedInvestorCount >= approvalsRequired;
     }
 
- function _getInvestorApproval(uint256 _campaignId, address _investor) internal view returns (bool) {
+    function _getInvestorApproval(uint256 _campaignId, address _investor) internal view returns (bool) {
         return campaignInvestorApprovals[_campaignId][_investor];
     }
+
     function _getEntrepreneurCampaignsCount(address _entrepreneur) private view returns (uint256) {
         return _campaignsOwnedByEntrepreneur[_entrepreneur].length();
     }
@@ -357,3 +393,4 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return _campaignsOwnedByEntrepreneur[_owner].at(index);
     }
 }
+
