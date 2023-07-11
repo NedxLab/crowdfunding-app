@@ -10,7 +10,7 @@ import { Web3Button } from "@web3modal/react";
 import { Montserrat } from "next/font/google";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { BsArrowBarLeft } from "react-icons/bs";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/campaignSpinner";
 
 const quicksand = Montserrat({
   weight: ["300", "400", "500", "600", "700"],

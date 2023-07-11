@@ -36,7 +36,6 @@ const CampaignForm = ({ setModal }: any) => {
     const listen = createCampaigns(params);
     listen
       .then((res: any) => {
-        console.log(res);
         setModal(false);
       })
       .catch((err: any) => {
@@ -47,7 +46,6 @@ const CampaignForm = ({ setModal }: any) => {
       });
     // setModal(false);
   };
-  console.log(loading);
   // change date format
   const toTimestamp = (dateStr: typeof date) => {
     const dateObj = Date.parse(dateStr);

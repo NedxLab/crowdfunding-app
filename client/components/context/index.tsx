@@ -157,11 +157,11 @@ export const StateContextProvider = ({ children }: any) => {
           minimumContribution,
           _imageUri,
           _campaignTitle,
-          _campaignDescription,
-          {
-            gasLimit: gasLimit,
-            gasPrice: gasPrice.add(extraGas),
-          }
+          _campaignDescription
+          // {
+          //   gasLimit: gasLimit,
+          //   gasPrice: gasPrice.add(extraGas),
+          // }
         );
         await tx.wait();
         return tx;

@@ -52,7 +52,11 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
           <h1 className="uppercase text-sm font-bold">{title.slice(0, 30)}</h1>
           <div className="mx-auto h-3 w-10/12 bg-gray-300 rounded-lg">
             <div
-              style={{ width: `${progressPercentage}%` }}
+              style={{
+                width: `${
+                  progressPercentage > 100 ? "100" : progressPercentage
+                }%`,
+              }}
               className={`h-full ${
                 progressPercentage < 70 ? "bg-blue-600" : "bg-green-600"
               }`}
