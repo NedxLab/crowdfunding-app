@@ -300,7 +300,11 @@ export default function Page({ params }: { params: { slug: string } }) {
             <div className="w-full flex flex-col py-16 px-5 lg:w-5/12">
               <div className="h-3 w-10/12 bg-gray-300">
                 <div
-                  style={{ width: `${progressPercentage}%` }}
+                  style={{
+                    width: `${
+                      progressPercentage > 100 ? 100 : progressPercentage
+                    }%`,
+                  }}
                   className={`h-full ${
                     progressPercentage < 70 ? "bg-blue-600" : "bg-green-600"
                   }`}

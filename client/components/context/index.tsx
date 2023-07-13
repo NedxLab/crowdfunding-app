@@ -150,11 +150,12 @@ export const StateContextProvider = ({ children }: any) => {
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
         let _targetAmount = ethers.utils.parseEther(Amount);
+        let minAmount = ethers.utils.parseEther(minimumContribution);
 
         tx = await contract.createCampaign(
           _targetAmount,
           _deadline,
-          minimumContribution,
+          minAmount,
           _imageUri,
           _campaignTitle,
           _campaignDescription
@@ -489,7 +490,7 @@ export const StateContextProvider = ({ children }: any) => {
         const contract = await getEtheriumContract();
 
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 1500000;
+        const gasLimit = 15000000;
         const gasPrice = await provider.getGasPrice();
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 

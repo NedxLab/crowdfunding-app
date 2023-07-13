@@ -83,14 +83,14 @@ export default function Home() {
             <CampaignForm setModal={setModal} />
           ) : (
             <div className="bg-[#ece7d5]">
-              <div className="-z-50 opacity-50 w-screen h-screen min-w-[100vw] min-h-[100vh] absolute top-0">
+              <div className="-z-50 opacity-50 w-screen h-max min-w-[100vw]  absolute top-0">
                 {/* <Image
                   src={hero}
                   alt="logo"
                   className="-z-50 opacity-50 w-screen h-screen min-w-[100vw] min-h-[100vh] absolute top-0"
                 /> */}
               </div>
-              <main className="flex py-32 w-screen h-screen min-w-[100vw] min-h-[100vh] flex-col items-center justify-center ">
+              <main className="flex py-32 w-screen h-max min-w-[100vw] flex-col items-center justify-center ">
                 <div
                   className=" w-2/3 h-64 py-24 rounded-2xl"
                   style={{

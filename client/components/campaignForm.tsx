@@ -37,6 +37,7 @@ const CampaignForm = ({ setModal }: any) => {
     listen
       .then((res: any) => {
         setModal(false);
+        // console.log(res);
       })
       .catch((err: any) => {
         console.log(err);
