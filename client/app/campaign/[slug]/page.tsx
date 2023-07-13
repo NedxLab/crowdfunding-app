@@ -129,7 +129,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   //   get investor donations
   //   const donation = getAllDonators(params.slug);
-  // console.log(campaigns[params.slug]);
+  console.log(campaigns[params.slug]);
 
   // approve funds
   const approveFunds = () => {
@@ -473,7 +473,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               <h1 className="py-4 text-2xl font-semibold">
                 List of Investors who contributed
               </h1>
-              {campaigns[params.slug].investors > 0 ? (
+              {campaigns[params.slug].investors.length > 0 ? (
                 <div className="flex flex-row text-xs">
                   <div>
                     <h1 className="py-2">Wallet Address</h1>
