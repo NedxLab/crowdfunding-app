@@ -129,7 +129,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   //   get investor donations
   //   const donation = getAllDonators(params.slug);
-  console.log(campaigns[params.slug]);
+  // console.log(campaigns[params.slug]);
 
   // approve funds
   const approveFunds = () => {
