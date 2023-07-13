@@ -319,7 +319,11 @@ export default function Page({ params }: { params: { slug: string } }) {
                 raised out of{" "}
                 {convertHexString(campaigns[params.slug].targetAmount["_hex"])}{" "}
                 Eth Needed with{" "}
-                <div className="text-xl font-bold">{days} Days left</div>
+                <div className="text-xl font-bold">
+                  {parseInt(days) <= 0
+                    ? "campaign is not ongoing"
+                    : `${days} Days left`}{" "}
+                </div>
               </span>
               {category === 1 ? (
                 progressPercentage >= 100 ? (
