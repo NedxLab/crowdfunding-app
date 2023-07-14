@@ -299,7 +299,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       makeCampaignExpired(params.slug);
     }
   }, [days]);
-  // console.log(campaigns[params.slug]);
+  console.log(campaigns[params.slug]);
   return (
     <>
       {campaigns ? (
@@ -438,12 +438,18 @@ export default function Page({ params }: { params: { slug: string } }) {
                 category === 0 &&
                 verified &&
                 campaigns[params.slug].entrepreneur === address ? (
-                <button
-                  onClick={() => setModal(true)}
-                  className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
-                >
-                  Create Funds Release request
-                </button>
+                campaigns[params.slug].requestCreated ? (
+                  <button className="my-6 uppercase bg-green-700 text-white mx-auto rounded-md px-5 py-2.5 text-xs">
+                    Release request created
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setModal(true)}
+                    className="my-6 uppercase bg-blue-600 text-white mx-auto rounded-md px-5 py-2.5 text-xs"
+                  >
+                    Create Funds Release request
+                  </button>
+                )
               ) : (
                 ""
               )}
@@ -475,7 +481,9 @@ export default function Page({ params }: { params: { slug: string } }) {
                       </button>
                     </div>
                   ) : (
-                    ""
+                    <button className="my-6 uppercase bg-green-700 text-white mx-auto rounded-md px-5 py-2.5 text-xs">
+                      Request approved
+                    </button>
                   )
                 ) : (
                   ""
