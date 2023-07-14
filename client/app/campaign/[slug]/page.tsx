@@ -299,7 +299,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       makeCampaignExpired(params.slug);
     }
   }, [days]);
-  console.log(campaigns[params.slug]);
+  // console.log(campaigns[params.slug]);
   return (
     <>
       {campaigns ? (
