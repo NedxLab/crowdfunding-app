@@ -3,7 +3,7 @@
 import React from "react";
 import { useContext } from "react";
 import { StateContext } from "@/components/context";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RequestForm from "@/components/requestForm";
 import { useAccount } from "wagmi";
 import { Web3Button } from "@web3modal/react";
@@ -36,7 +36,10 @@ export default function Page({ params }: { params: { slug: string } }) {
     confirmFundsReceived,
     declineFundRelease,
     withdrawFunds,
+    isRequestApprovedOrDeclined,
+    makeCampaignExpired,
   }: any = useContext(StateContext);
+
   const [amount, setAmount] = useState<any>();
   const [modal, setModal] = useState(false);
   const [donations, setDonations] = useState([]);
@@ -46,6 +49,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [declineSpin, setDeclineSpin] = useState(false);
   const [witdrawSpin, setWithdrawSpin] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [isApproved, setIsApproved] = useState();
   const { user } = useUser();
 
   // convert hex string
@@ -85,6 +89,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     });
 
   // console.log(campaigns[params.slug]);
+
   // get user categories
   if (address) {
     const checkUSer = getUserByAddress(address);
@@ -103,7 +108,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     event.preventDefault();
     setContSpin(true);
     const campaignId = params.slug;
-    const correctAmount = amount * Math.pow(10, 18);
+    const correctAmount = amount;
     const campParams = {
       correctAmount,
       campaignId,
@@ -126,10 +131,6 @@ export default function Page({ params }: { params: { slug: string } }) {
         setContSpin(false);
       });
   };
-
-  //   get investor donations
-  //   const donation = getAllDonators(params.slug);
-  // console.log(campaigns[params.slug]);
 
   // approve funds
   const approveFunds = () => {
@@ -190,7 +191,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         // if (res.status === 200) {
         //   setText("Released!");
         // }
-        console.log(res);
+        // console.log(res);
       })
       .catch((err: any) => {
         console.log(err);
@@ -271,6 +272,34 @@ export default function Page({ params }: { params: { slug: string } }) {
     }
   };
 
+  // check if funds is declined or not
+  const checkApprove = () => {
+    const check = isRequestApprovedOrDeclined(params.slug);
+    check
+      .then((res: any) => {
+        setIsApproved(res);
+
+        // console.log(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    checkApprove();
+  }, [address, approveSpin]);
+
+  useEffect(() => {
+    // call expired function
+    if (
+      parseInt(days) < 0 ||
+      (parseInt(days) === -0 && campaigns[params.slug].status !== 2)
+    ) {
+      makeCampaignExpired(params.slug);
+    }
+  }, [days]);
+  // console.log(campaigns[params.slug]);
   return (
     <>
       {campaigns ? (
@@ -324,7 +353,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 {convertHexString(campaigns[params.slug].targetAmount["_hex"])}{" "}
                 Eth Needed with{" "}
                 <div className="text-xl font-bold">
-                  {parseInt(days) <= 0
+                  {parseInt(days) < 0 || parseInt(days) === -0
                     ? "campaign is not ongoing"
                     : `${days} Days left`}{" "}
                 </div>
@@ -348,7 +377,10 @@ export default function Page({ params }: { params: { slug: string } }) {
                           id="Amount"
                           name="amount"
                           type="number"
-                          min={parseInt(
+                          min={convertHexString(
+                            campaigns[params.slug].minimumContribution["_hex"]
+                          )}
+                          step={convertHexString(
                             campaigns[params.slug].minimumContribution["_hex"]
                           )}
                           className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -375,7 +407,9 @@ export default function Page({ params }: { params: { slug: string } }) {
               <p>
                 Minimum Contribution:{" "}
                 <span className="font-medium text-blue-700">
-                  {parseInt(campaigns[params.slug].minimumContribution["_hex"])}{" "}
+                  {convertHexString(
+                    campaigns[params.slug].minimumContribution["_hex"]
+                  )}{" "}
                   Eth
                 </span>
               </p>
@@ -424,7 +458,8 @@ export default function Page({ params }: { params: { slug: string } }) {
                     Release Funds
                   </button>
                 ) : category === 1 && campaigns[params.slug].requestCreated ? (
-                  campaigns[params.slug].investors.includes(address) ? (
+                  campaigns[params.slug].investors.includes(address) &&
+                  !isApproved ? (
                     <div className="flex flex-row items-center justify-center gap-2">
                       <button
                         onClick={approveFunds}

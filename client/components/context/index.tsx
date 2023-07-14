@@ -19,7 +19,7 @@ export const StateContextProvider = ({ children }: any) => {
   if (typeof window !== "undefined") {
     const { ethereum }: any = window;
 
-    const contractAddress = "0x58298cD7AB19A2202F6804F6aEFc5AF267b88c78";
+    const contractAddress = "0xa823380481AbD22a070a8689EFc5B8C359929341";
     const contractAbi = abi.abi;
     let tx;
 
@@ -199,9 +199,9 @@ export const StateContextProvider = ({ children }: any) => {
         const gasPrice = await provider.getGasPrice();
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
-        // _campaignId = ethers.utils.parseEther(_campaignId);
+        let amount = ethers.utils.parseEther(correctAmount);
         tx = await contract.donateToCampaign(_campaignId, {
-          value: ethers.BigNumber.from(correctAmount.toString()),
+          value: amount,
           gasLimit: gasLimit,
           gasPrice: gasPrice.add(extraGas),
         });
@@ -392,10 +392,10 @@ export const StateContextProvider = ({ children }: any) => {
         const gasPrice = await provider.getGasPrice();
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
-        // let _targetAmount = ethers.utils.parseEther(Amount);
+        let _targetAmount = ethers.utils.parseEther(_requestAmount);
         tx = await contract.createFundReleaseRequest(
           _campaignId,
-          _requestAmount,
+          _targetAmount,
           _vendorAddress,
           {
             gasLimit: gasLimit,
@@ -475,7 +475,6 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         await tx.wait();
-        console.log(tx);
 
         return tx;
       } catch (error) {
@@ -490,7 +489,7 @@ export const StateContextProvider = ({ children }: any) => {
         const contract = await getEtheriumContract();
 
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const gasLimit = 15000000;
+        const gasLimit = 1500000;
         const gasPrice = await provider.getGasPrice();
         const extraGas = ethers.utils.parseUnits("100", "gwei");
 
@@ -501,6 +500,53 @@ export const StateContextProvider = ({ children }: any) => {
         });
         await tx.wait();
         console.log(tx);
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // is Request Approved Or Declined
+    const isRequestApprovedOrDeclined = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return;
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.isRequestApprovedOrDeclined(_campaignId, {
+          gasLimit: gasLimit,
+          gasPrice: gasPrice.add(extraGas),
+        });
+        // await tx.wait();
+        // console.log(tx);
+
+        return tx;
+      } catch (error) {
+        reportError(error);
+      }
+    };
+    // make Campaign Expired
+    const makeCampaignExpired = async (_campaignId: any) => {
+      try {
+        if (!ethereum) return;
+
+        const contract = await getEtheriumContract();
+
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const gasLimit = 1500000;
+        const gasPrice = await provider.getGasPrice();
+        const extraGas = ethers.utils.parseUnits("100", "gwei");
+
+        // let _targetAmount = ethers.utils.parseEther(Amount);
+        tx = await contract.makeCampaignExpired(_campaignId);
+        // await tx.wait();
+        // console.log(tx);
 
         return tx;
       } catch (error) {
@@ -525,7 +571,6 @@ export const StateContextProvider = ({ children }: any) => {
           gasPrice: gasPrice.add(extraGas),
         });
         await tx.wait();
-        console.log(tx);
 
         return tx;
       } catch (error) {
@@ -555,6 +600,8 @@ export const StateContextProvider = ({ children }: any) => {
             confirmFundsReceived,
             declineFundRelease,
             withdrawFunds,
+            isRequestApprovedOrDeclined,
+            makeCampaignExpired,
           } as any
         }
       >

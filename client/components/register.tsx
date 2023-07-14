@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { useState } from "react";
 import { IRegisterUser } from "@/types/types";
 import { useContext } from "react";
 import { StateContext } from "./context";
 import Spinner from "./spinner";
 
-const Register = ({ previous }: any) => {
+const Register = () => {
   // retrieve registuser function from context
   const { registerUSer }: any = useContext(StateContext);
 
@@ -39,8 +38,7 @@ const Register = ({ previous }: any) => {
     const listen = registerUSer(params);
     listen
       .then((res: any) => {
-        console.log(res);
-        previous();
+        location.replace("/ ");
       })
       .catch((err: any) => {
         console.log(err);

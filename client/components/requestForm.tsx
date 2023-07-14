@@ -4,7 +4,7 @@ import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { StateContext } from "./context";
-import Spinner from "./spinner";
+import Spinner from "@/components/campaignSpinner";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const RequestForm = ({ modal, setModal, limit, id }: any) => {
@@ -63,7 +63,6 @@ const RequestForm = ({ modal, setModal, limit, id }: any) => {
         // } else {
         setErrorMessage("");
         // }
-        console.log(res);
       })
       .catch((err: any) => {
         setVerified(false);

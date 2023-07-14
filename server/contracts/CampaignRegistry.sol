@@ -283,13 +283,16 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
     ) external onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Entrepreneur) {
         Campaign storage campaign = campaigns[_campaignId];
         require(campaign.status == CampaignStatus.Ongoing, "Campaign is not ongoing");
-        require(_isRequestApproved(campaign), "Request has not been approved by the required number of investors");
-
+        require(_isRequestApproved(_campaignId), "Request has not been approved by the required number of investors");
         address vendor = campaigns[_campaignId].vendor;
-        uint256 amount = campaigns[_campaignId].raisedAmount;
-        campaigns[_campaignId].vendor.transfer(amount);
+        uint256 amountToRelease = campaigns[_campaignId].requestAmount;
+        campaign.raisedAmount -= amountToRelease;
+
+        campaigns[_campaignId].vendor.transfer(amountToRelease);
         campaign.status = CampaignStatus.Successful;
-        emit FundsReleased(_campaignId, vendor, amount);
+        _clearFundReleaseApprovals(_campaignId);
+
+        emit FundsReleased(_campaignId, vendor, amountToRelease);
     }
 
     function confirmFundsReceived(
@@ -298,7 +301,6 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         Campaign storage campaign = campaigns[_campaignId];
 
         require(campaign.vendor == msg.sender, "Only the campaign vendor can confirm funds received.");
-        require(_isRequestApproved(campaign), "Request has not been approved by the required number of investors");
         require(!campaign.fundsReceived, "Funds for this campaign have already been received.");
 
         campaign.fundsReceived = true;
@@ -339,15 +341,41 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         emit FundReleaseDeclined(_campaignId);
     }
 
+    function isRequestApprovedOrDeclined(
+        uint256 _campaignId
+    ) external view onlyVerifiedUser campaignExists(_campaignId) onlyCategory(Category.Investor) returns (bool) {
+        bool isRequestApprovedOrDecline = campaignInvestorApprovals[_campaignId][msg.sender];
+        if (isRequestApprovedOrDecline) {
+            return true;
+        }
+        return false;
+    }
+
+    function makeCampaignExpired(uint256 _campaignId) external {
+        Campaign storage campaign = campaigns[_campaignId];
+
+        require(campaign.deadline < block.timestamp, "Campaign deadline has not passed yet.");
+
+        campaign.status = CampaignStatus.Expired;
+    }
+
     /*********************** Internal methods *******************/
 
+    function _clearFundReleaseApprovals(uint _campaignId) private {
+        Campaign storage _campaign = campaigns[_campaignId];
+        uint256 totalInvestorCount = _campaign.investors.length;
+
+        for (uint256 i = 0; i < totalInvestorCount; i++) {
+            address investor = _campaign.investors[i];
+            campaignInvestorApprovals[_campaignId][investor] = false;
+        }
+    }
+
     function _checkFundingCompleteOrExpire(uint256 _campaignId) internal {
-        if (campaigns[_campaignId].deadline > block.timestamp) {
-            campaigns[_campaignId].status = CampaignStatus.Ongoing;
-        } else if (campaigns[_campaignId].raisedAmount >= campaigns[_campaignId].targetAmount) {
+        if (campaigns[_campaignId].raisedAmount >= campaigns[_campaignId].targetAmount) {
             campaigns[_campaignId].status = CampaignStatus.Successful;
             campaigns[_campaignId].completeAt = block.timestamp;
-        } else {
+        } else if (block.timestamp > campaigns[_campaignId].deadline) {
             campaigns[_campaignId].status = CampaignStatus.Expired;
         }
     }
@@ -356,7 +384,8 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return _campaign.requestCreated;
     }
 
-    function _isRequestApproved(Campaign storage _campaign) private view returns (bool) {
+    function _isRequestApproved(uint256 _campaignId) private view returns (bool) {
+        Campaign storage _campaign = campaigns[_campaignId];
         uint256 totalDonationsCount = donationCount[_campaign.campaignId];
         uint256 approvalsRequired = totalDonationsCount / 2; // At least 50% of investors must approve the fund release request
         uint256 approvedInvestorCount = 0;
@@ -364,7 +393,7 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
 
         for (uint256 i = 0; i < totalInvestorCount; i++) {
             address investor = _campaign.investors[i];
-            bool isApprovedByInvestor = _getInvestorApproval(i, investor);
+            bool isApprovedByInvestor = _getInvestorApproval(_campaignId, investor);
             if (isApprovedByInvestor) {
                 approvedInvestorCount++;
             }
@@ -393,4 +422,3 @@ contract CampaignRegistry is ICampaignRegistry, Initializable, OwnableUpgradeabl
         return _campaignsOwnedByEntrepreneur[_owner].at(index);
     }
 }
-

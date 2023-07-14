@@ -34,7 +34,7 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
   const date =
     (new Date(parseInt(deadline) * 1000).getTime() - new Date().getTime()) /
     (1000 * 60 * 60 * 24);
-  const days = date > 0 ? date.toFixed() : "Campaign not ongoing";
+  const days = date >= 0 ? date.toFixed() : "Campaign not ongoing";
   // (
   //   (new Date(parseInt(deadline) * 1000).getTime() - new Date().getTime()) /
   //   (1000 * 60 * 60 * 24)
@@ -67,7 +67,7 @@ const Campaign = ({ title, img, donated, amount, deadline }: any) => {
               <h1>
                 <span className="font-bold text-blue-600">{days} </span>
               </h1>
-              {date > 0 ? (
+              {date >= 0 ? (
                 <h1 className="text-xs text-[#777575] uppercase">Days left</h1>
               ) : (
                 ""
