@@ -358,7 +358,11 @@ export default function Page({ params }: { params: { slug: string } }) {
                     : `${days} Days left`}{" "}
                 </div>
               </span>
-              {category === 1 ? (
+              {parseInt(days) < 0 || parseInt(days) === -0 ? (
+                <button className="px-3 py-2 my-3 bg-gray-500 text-white">
+                  Campaign is expired
+                </button>
+              ) : category === 1 ? (
                 progressPercentage >= 100 ? (
                   <button className="px-3 py-2 my-3 bg-green-600 text-white">
                     Campaign is fully funded
